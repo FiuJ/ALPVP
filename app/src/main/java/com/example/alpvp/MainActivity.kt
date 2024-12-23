@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
+//                        test kalo ini masuk berarti jollyne gawe matthew hehe
                     )
                 }
             }
