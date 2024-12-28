@@ -38,7 +38,7 @@ import com.example.alpvp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(){
+fun Register(){
 
     Column (
         modifier = Modifier
@@ -76,7 +76,22 @@ fun Login(){
                 value = "",
                 onValueChange = { },
                 label = {
-                    Text("Username / Email Address", color = Color.Gray)
+                    Text("Username", color = Color.Gray)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp)),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Black
+                )
+
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = "",
+                onValueChange = { },
+                label = {
+                    Text("Email Address", color = Color.Gray)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,43 +130,16 @@ fun Login(){
                 )
             ) {
                 Text(
-                    text = "Login",
+                    text = "Register",
                     fontSize = 20.sp
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-//            Row (
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                verticalAlignment = Alignment.CenterVertically
-//            ){
-//                Divider(
-//                    modifier = Modifier
-//                        .height(1.dp)
-//                        .weight(1f),
-//                    color = Color.DarkGray
-//                )
-//                Text(
-//                    text = "or",
-//                    fontSize = 20.sp,
-//                    modifier = Modifier
-//                        .weight(0.5f),
-//                    textAlign = TextAlign.Center,
-//                    color = Color.DarkGray
-//                )
-//                Divider(
-//                    modifier = Modifier
-//                        .height(1.dp)
-//                        .weight(1f),
-//                    color = Color.DarkGray
-//                )
-//
-//            }
 
-            Spacer(modifier = Modifier.height(80.dp))
+
+            Spacer(modifier = Modifier.height(40.dp))
 
             Column (
                 modifier = Modifier
@@ -165,19 +153,19 @@ fun Login(){
                     verticalAlignment = Alignment.CenterVertically,
                 ){
                     Text(
-                        text = "Dont have an account? ",
+                        text = "Do you have an account? ",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Light,
                         color = Color.White
                     )
                     Text(
-                        text = "Sign Up",
+                        text = "Login",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
                             .clickable {
-                                //ke Sign Up
+                                //ke Login
                             }
                     )
                 }
@@ -186,7 +174,7 @@ fun Login(){
             }
 
 
-            
+
         }
 
 
@@ -195,6 +183,6 @@ fun Login(){
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun LoginPreview(){
-    Login()
+fun RegisterPreview(){
+    Register()
 }
