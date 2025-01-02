@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "131672828965",
+    "project_id": "alp-vp-a77d1",
+    "storage_bucket": "alp-vp-a77d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131672828965:android:5f753f79f620046a6963cc",
+        "android_client_info": {
+          "package_name": "com.example.alpvp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131672828965-kl5ko805u13v86hd46lme5tgar3d6brg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alpvp",
+            "certificate_hash": "d2fb034f07efb0739f33877e4ec3ab9e1d1a0385"
+          }
+        },
+        {
+          "client_id": "131672828965-sr5l3jhi4gbekfub14bdpjc120bn1q24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg89VwRfds6fwuBg2-0rSzqTuFH4kGCLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131672828965-sr5l3jhi4gbekfub14bdpjc120bn1q24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,5 +62,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     // add DataStore preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // google sign in with firebase
+    implementation (platform("com.google.firebase:firebase-bom:33.7.0")) //update version sesuai request
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.android.gms:play-services-auth:21.3.0")
+//    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+//    implementation (platform("com.google.firebase:firebase-bom:31.5.0"))
 
 }
