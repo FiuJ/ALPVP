@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -122,34 +123,7 @@ fun Login(){
 
             Spacer(modifier = Modifier.height(20.dp))
 
-//            Row (
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                verticalAlignment = Alignment.CenterVertically
-//            ){
-//                Divider(
-//                    modifier = Modifier
-//                        .height(1.dp)
-//                        .weight(1f),
-//                    color = Color.DarkGray
-//                )
-//                Text(
-//                    text = "or",
-//                    fontSize = 20.sp,
-//                    modifier = Modifier
-//                        .weight(0.5f),
-//                    textAlign = TextAlign.Center,
-//                    color = Color.DarkGray
-//                )
-//                Divider(
-//                    modifier = Modifier
-//                        .height(1.dp)
-//                        .weight(1f),
-//                    color = Color.DarkGray
-//                )
 //
-//            }
 
             Spacer(modifier = Modifier.height(80.dp))
 
