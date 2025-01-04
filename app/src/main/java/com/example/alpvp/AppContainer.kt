@@ -8,7 +8,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.alpvp.repositories.AuthenticationRepository
 import com.example.alpvp.repositories.NetworkAuthenticationRepository
+import com.example.alpvp.repositories.NetworkUserRepository
+import com.example.alpvp.repositories.UserRepository
 import com.example.alpvp.services.AuthenticationAPIService
+import com.example.alpvp.services.UserAPIService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
     val authenticationRepository: AuthenticationRepository
+    val userRepository: UserRepository
 
 }
 
@@ -39,11 +43,21 @@ class DefaultAppContainer(
         retrofit.create(AuthenticationAPIService::class.java)
     }
 
+    private val userRetrofitService: UserAPIService by lazy {
+        val retrofit = initRetrofit()
+
+        retrofit.create(UserAPIService::class.java)
+    }
+
 
 
     //repository init disini
     override val authenticationRepository: AuthenticationRepository by lazy {
         NetworkAuthenticationRepository(authenticationRetrofitService)
+    }
+
+    override val userRepository: UserRepository by lazy {
+        NetworkUserRepository(userDataStore, userRetrofitService)
     }
 
     private fun initRetrofit(): Retrofit {
