@@ -109,7 +109,9 @@ fun Register(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp)),
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Black
+                    containerColor = Color.Black,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
 
             )
@@ -127,7 +129,9 @@ fun Register(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp)),
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Black
+                    containerColor = Color.Black,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
 
             )
@@ -145,7 +149,9 @@ fun Register(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp)),
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Black
+                    containerColor = Color.Black,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
 
             )

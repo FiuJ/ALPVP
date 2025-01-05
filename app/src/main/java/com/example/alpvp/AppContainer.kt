@@ -28,7 +28,8 @@ class DefaultAppContainer(
     private val userDataStore: DataStore<Preferences>
 ):AppContainer{
     //link baseurl
-    private val baseUrl = "http://192.168.1.6/"
+    private val baseUrl = "http://192.168.43.222:3000/"
+    //IP TEST
 
 //    private val authenticationRetrofitService: AuthenticationAPIService by lazy {
 //        val retrofit = initRetrofit()
