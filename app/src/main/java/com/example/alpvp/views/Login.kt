@@ -55,7 +55,7 @@ fun Login(
     context: Context
 ){
     val loginUIState by authenticationViewModel.authenticationUIState.collectAsState()
-    val image = "login_image"
+    
 
     val focusManager = LocalFocusManager.current
 
