@@ -92,8 +92,9 @@ class ProfileViewModel (
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[APPLICATION_KEY] as BoxingApplication)
+                val application = (this[APPLICATION_KEY] as BoxingApplication)//bawaan
                 val userRepository = application.container.userRepository
+                //tambahkan function sesuai fitur
                 ProfileViewModel(userRepository)
             }
         }
