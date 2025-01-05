@@ -58,7 +58,7 @@ fun BoxingApp(
 //                    .fillMaxSize()
 //                    .background(Color.White),
 //                homeViewModel = homeViewModel,
-//                navController = navController,
+                navController = navController,
 //                token = token.value,
 //                todoDetailViewModel = todoDetailViewModel,
 //                context = localContext
@@ -67,7 +67,7 @@ fun BoxingApp(
 
         composable(route = PagesEnum.Profile.name) {
             Profile(
-                profileViewModel = viewModel(),
+                profileViewModel = viewModel(factory = ProfileViewModel.Factory),
                 navController = navController,
                 token = token.value,
                 context = localContext

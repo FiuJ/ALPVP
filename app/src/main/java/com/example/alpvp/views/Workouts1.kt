@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,10 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
+import com.example.alpvp.enums.PagesEnum
 
 @Composable
-fun Workouts1(){
+fun Workouts1(
+    navController: NavHostController
+){
 
     Column (
         modifier = Modifier
@@ -218,6 +225,20 @@ fun Workouts1(){
                 }
             }
 
+            Button(
+                onClick = {
+                    navController.navigate(PagesEnum.Profile.name){
+                        popUpTo(PagesEnum.Home.name){
+                            inclusive = true
+                        }
+                    }
+                }
+            ) {
+                Text(
+                    text = "Profile"
+                )
+            }
+
 
         }
 
@@ -229,6 +250,8 @@ fun Workouts1(){
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun Workouts1Preview(){
-    Workouts1()
+    Workouts1(
+        navController = rememberNavController()
+    )
 }
 
