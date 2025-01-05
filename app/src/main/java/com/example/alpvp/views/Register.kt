@@ -1,5 +1,7 @@
-package com.example.alpvp.View
+package com.example.alpvp.views
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,30 +17,52 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
+import com.example.alpvp.enums.PagesEnum
+import com.example.alpvp.ui.theme.ALPVPTheme
+import com.example.alpvp.uiStates.AuthenticationStatusUIState
+import com.example.alpvp.viewModels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Register(){
+fun Register(
+    authenticationViewModel: AuthenticationViewModel,
+    navController: NavHostController,
+    context: Context
+){
+    val registerUIState by authenticationViewModel.authenticationUIState.collectAsState()
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(authenticationViewModel.dataStatus) {
+        val dataStatus = authenticationViewModel.dataStatus
+        if (dataStatus is AuthenticationStatusUIState.Failed) {
+            Toast.makeText(context, dataStatus.errorMessage, Toast.LENGTH_SHORT).show()
+            authenticationViewModel.clearErrorMessage()
+        }
+    }
 
     Column (
         modifier = Modifier
@@ -73,8 +97,11 @@ fun Register(){
             Spacer(modifier = Modifier.height(20.dp))
 
             TextField(
-                value = "",
-                onValueChange = { },
+                value = authenticationViewModel.usernameInput,
+                onValueChange = {
+                    authenticationViewModel.changeUsernameInput(it)
+                    authenticationViewModel.checkRegisterForm()
+                },
                 label = {
                     Text("Username", color = Color.Gray)
                 },
@@ -88,8 +115,11 @@ fun Register(){
             )
             Spacer(modifier = Modifier.height(20.dp))
             TextField(
-                value = "",
-                onValueChange = { },
+                value = authenticationViewModel.emailInput,
+                onValueChange = {
+                    authenticationViewModel.changeEmailInput(it)
+                    authenticationViewModel.checkRegisterForm()
+                },
                 label = {
                     Text("Email Address", color = Color.Gray)
                 },
@@ -103,8 +133,11 @@ fun Register(){
             )
             Spacer(modifier = Modifier.height(20.dp))
             TextField(
-                value = "",
-                onValueChange = { },
+                value = authenticationViewModel.passwordInput,
+                onValueChange = {
+                    authenticationViewModel.changePasswordInput(it)
+                    authenticationViewModel.checkRegisterForm()
+                },
                 label = {
                     Text("Password", color = Color.Gray)
                 },
@@ -120,7 +153,9 @@ fun Register(){
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    authenticationViewModel.registerUser(navController)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp)),
@@ -165,7 +200,12 @@ fun Register(){
                         color = Color.White,
                         modifier = Modifier
                             .clickable {
-                                //ke Login
+                                authenticationViewModel.resetViewModel()
+                                navController.navigate(PagesEnum.Login.name){
+                                    popUpTo(PagesEnum.Register.name){
+                                        inclusive = true
+                                    }
+                                }
                             }
                     )
                 }
@@ -184,5 +224,12 @@ fun Register(){
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun RegisterPreview(){
-    Register()
+    ALPVPTheme {
+        Register(
+            authenticationViewModel = viewModel(),
+            navController = rememberNavController(),
+            context = LocalContext.current
+
+        )
+    }
 }

@@ -3,7 +3,8 @@ package com.example.alpvp.enums
 enum class PagesEnum() {
     Login,
     Register,
-    Home,
+    Profile,
+    Home, //workout1
 //    CreateTodo,
 //    TodoDetail
 }

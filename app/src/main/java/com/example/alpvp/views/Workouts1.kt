@@ -1,4 +1,4 @@
-package com.example.alpvp.View
+package com.example.alpvp.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alpvp.R
-import kotlin.math.round
 
 @Composable
 fun Workouts1(){
