@@ -17,6 +17,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.AuthenticationViewModel
 import com.example.alpvp.viewModels.ProfileViewModel
+import com.example.alpvp.viewModels.Workout1DetailViewModel
+import com.example.alpvp.viewModels.Workout1ViewModel
 
 @Composable
 fun BoxingApp(
@@ -54,14 +56,11 @@ fun BoxingApp(
 
         composable(route = PagesEnum.Home.name) {
             Workouts1(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .background(Color.White),
-//                homeViewModel = homeViewModel,
-                navController = navController,
-//                token = token.value,
-//                todoDetailViewModel = todoDetailViewModel,
-//                context = localContext
+                navController = navController, // Use the shared instance here
+                workout1ViewModel = viewModel(factory = Workout1ViewModel.Factory),
+                workout1DetailViewModel = viewModel(factory = Workout1DetailViewModel.Factory),
+                token = token.value, // Use the collected token value here
+                context = localContext
             )
         }
 

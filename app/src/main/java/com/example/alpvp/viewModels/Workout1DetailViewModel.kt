@@ -34,7 +34,7 @@ class Workout1DetailViewModel (
     var deleteStatus: StringDataStatusUIState by mutableStateOf(StringDataStatusUIState.Start)
         private set
 
-    fun getTodo(token: String, courseId: Int, navController: NavHostController, isUpdating: Boolean) {
+    fun getCourse(token: String, courseId: Int, navController: NavHostController, isUpdating: Boolean) {
         viewModelScope.launch {
             dataStatus = CourseDetailDataStatusUIState.Loading
 

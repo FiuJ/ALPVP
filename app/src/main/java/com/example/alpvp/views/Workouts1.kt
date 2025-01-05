@@ -258,6 +258,19 @@ fun Workouts1(
                 }
             }
 
+            Button(
+                onClick = {
+                    navController.navigate(PagesEnum.Profile.name){
+                        popUpTo(PagesEnum.Home.name){
+                            inclusive = true
+                        }
+                    }
+                }
+            ) {
+                Text(
+                    text = "Profile"
+                )
+            }
                 // TODO: Read all Courses
                 when (dataStatus) {
                     is CourseDataStatusUIState.Success -> if (dataStatus.data.isNotEmpty()) {
@@ -271,9 +284,14 @@ fun Workouts1(
                                 CourseCardTemplate (
                                     title = course.detail_course,
                                     course_duration = course.course_duration,
-                                ){
+                                    modifier = Modifier
+                                        .padding(bottom = 12.dp),
+                                    onCardClick = {
+                                        workout1DetailViewModel.getCourse(token, course.course_id,navController, false )
+                                    }
+                                )
 
-                                }
+
                             }
                         }
                     } else {
@@ -284,7 +302,7 @@ fun Workouts1(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "No Task Found!",
+                                text = "No Course Found!",
                                 fontSize = 21.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -297,7 +315,7 @@ fun Workouts1(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "No Task Found!",
+                            text = "Fail!",
                             fontSize = 21.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -320,19 +338,7 @@ fun Workouts1(
 
 
 
-//            Button(
-//                onClick = {
-//                    navController.navigate(PagesEnum.Profile.name){
-//                        popUpTo(PagesEnum.Home.name){
-//                            inclusive = true
-//                        }
-//                    }
-//                }
-//            ) {
-//                Text(
-//                    text = "Profile"
-//                )
-//            }
+
 
             // TODO: Make a navigation bar here
 
