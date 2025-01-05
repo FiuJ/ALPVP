@@ -78,41 +78,7 @@ class AuthenticationViewModel (
         this.passwordInput = passwordInput
     }
 
-    fun changePasswordVisibility() {
-        _authenticationUIState.update { currentState ->
-            if (currentState.showPassword) {
-                currentState.copy(
-                    showPassword = false,
-                    passwordVisibility = PasswordVisualTransformation(),
-                    passwordVisibilityIcon = R.drawable.ic_password_visible
-                )
-            } else {
-                currentState.copy(
-                    showPassword = true,
-                    passwordVisibility = VisualTransformation.None,
-                    passwordVisibilityIcon = R.drawable.ic_password_invisible
-                )
-            }
-        }
-    }
 
-    fun changeConfirmPasswordVisibility() {
-        _authenticationUIState.update { currentState ->
-            if (currentState.showConfirmPassword) {
-                currentState.copy(
-                    showConfirmPassword = false,
-                    confirmPasswordVisibility = PasswordVisualTransformation(),
-                    confirmPasswordVisibilityIcon = R.drawable.ic_password_visible
-                )
-            } else {
-                currentState.copy(
-                    showConfirmPassword = true,
-                    confirmPasswordVisibility = VisualTransformation.None,
-                    confirmPasswordVisibilityIcon = R.drawable.ic_password_invisible
-                )
-            }
-        }
-    }
 
     fun checkLoginForm() {
         if (emailInput.isNotEmpty() && passwordInput.isNotEmpty()) {

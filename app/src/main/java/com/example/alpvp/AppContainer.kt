@@ -7,10 +7,13 @@ import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.alpvp.repositories.AuthenticationRepository
+import com.example.alpvp.repositories.CourseRepository
 import com.example.alpvp.repositories.NetworkAuthenticationRepository
+import com.example.alpvp.repositories.NetworkCourseRepository
 import com.example.alpvp.repositories.NetworkUserRepository
 import com.example.alpvp.repositories.UserRepository
 import com.example.alpvp.services.AuthenticationAPIService
+import com.example.alpvp.services.CourseAPIService
 import com.example.alpvp.services.UserAPIService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,16 +23,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface AppContainer {
     val authenticationRepository: AuthenticationRepository
     val userRepository: UserRepository
+    val courseRepository: CourseRepository
+
 
 }
-
 
 class DefaultAppContainer(
     private val userDataStore: DataStore<Preferences>
 ):AppContainer{
     //link baseurl
-    private val baseUrl = "http://192.168.43.222:3000/"
-    //IP TEST
+    private val baseUrl = "http://192.168.1.6:3000/"
+//    private val baseUrl = "http://192.168.43.222:3000/"
 
 //    private val authenticationRetrofitService: AuthenticationAPIService by lazy {
 //        val retrofit = initRetrofit()
@@ -50,9 +54,19 @@ class DefaultAppContainer(
         retrofit.create(UserAPIService::class.java)
     }
 
+    private val courseRetrofitService: CourseAPIService by lazy {
+        val retrofit = initRetrofit()
+
+        retrofit.create(CourseAPIService::class.java)
+    }
+
 
 
     //repository init disini
+    override val courseRepository : CourseRepository by lazy {
+        NetworkCourseRepository(courseRetrofitService )
+    }
+
     override val authenticationRepository: AuthenticationRepository by lazy {
         NetworkAuthenticationRepository(authenticationRetrofitService)
     }

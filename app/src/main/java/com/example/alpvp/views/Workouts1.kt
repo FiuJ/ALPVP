@@ -1,7 +1,10 @@
 package com.example.alpvp.views
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,30 +16,59 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
 import com.example.alpvp.enums.PagesEnum
+import com.example.alpvp.uiStates.CourseDataStatusUIState
+import com.example.alpvp.viewModels.Workout1DetailViewModel
+import com.example.alpvp.viewModels.Workout1ViewModel
+import com.example.alpvp.views.templates.CourseCardTemplate
 
 @Composable
 fun Workouts1(
-    navController: NavHostController
-){
+    navController: NavHostController,
+    workout1ViewModel: Workout1ViewModel,
+    workout1DetailViewModel: Workout1DetailViewModel,
+    token: String,
+    context: Context,
+
+    ){
+    val username = workout1ViewModel.username.collectAsState()
+    val dataStatus = workout1ViewModel.dataStatus
+
+    LaunchedEffect(token) {
+        if (token != "Unknown") {
+            workout1ViewModel.getAllCourses(token)
+        }
+    }
+
+    LaunchedEffect(dataStatus) {
+        if (dataStatus is CourseDataStatusUIState.Failed) {
+            Toast.makeText(context, "DATA ERROR: ${dataStatus.errorMessage}", Toast.LENGTH_SHORT).show()
+            workout1ViewModel.clearDataErrorMessage()
+        }
+    }
 
     Column (
         modifier = Modifier
@@ -196,7 +228,7 @@ fun Workouts1(
                     .padding(top = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
                 Column {
                     Text(
                         text = "Daily Streaks",
@@ -208,7 +240,7 @@ fun Workouts1(
                         modifier = Modifier.padding(top = 2.dp)
                     )
                 }
-                Row (
+                Row(
                     modifier = Modifier
                         .width(60.dp)
                         .height(32.dp)
@@ -217,7 +249,7 @@ fun Workouts1(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
 
-                ){
+                ) {
                     Text(
                         text = "\uD83D\uDD25 2",
                         fontWeight = FontWeight.SemiBold
@@ -225,20 +257,83 @@ fun Workouts1(
                 }
             }
 
-            Button(
-                onClick = {
-                    navController.navigate(PagesEnum.Profile.name){
-                        popUpTo(PagesEnum.Home.name){
-                            inclusive = true
+                // TODO: Read all Courses
+                when (dataStatus) {
+                    is CourseDataStatusUIState.Success -> if (dataStatus.data.isNotEmpty()) {
+                        LazyColumn(
+                            flingBehavior = ScrollableDefaults.flingBehavior(),
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                        ) {
+                            items(dataStatus.data) { course ->
+                                CourseCardTemplate (
+                                    title = course.course_title,
+                                    course_duration = course.course_duration,
+                                ){
+
+                                }
+                            }
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "No Task Found!",
+                                fontSize = 21.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
+                    is CourseDataStatusUIState.Failed -> Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "No Task Found!",
+                            fontSize = 21.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    else -> Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Wait",
+                            fontSize = 21.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
-            ) {
-                Text(
-                    text = "Profile"
-                )
-            }
 
+
+
+
+
+//            Button(
+//                onClick = {
+//                    navController.navigate(PagesEnum.Profile.name){
+//                        popUpTo(PagesEnum.Home.name){
+//                            inclusive = true
+//                        }
+//                    }
+//                }
+//            ) {
+//                Text(
+//                    text = "Profile"
+//                )
+//            }
+
+            // TODO: Make a navigation bar here
 
         }
 
@@ -251,7 +346,11 @@ fun Workouts1(
 @Preview(showBackground = true, showSystemUi = true)
 fun Workouts1Preview(){
     Workouts1(
-        navController = rememberNavController()
+        navController = rememberNavController(),
+        workout1ViewModel = viewModel (factory= Workout1ViewModel.Factory),
+        workout1DetailViewModel = viewModel(factory= Workout1DetailViewModel.Factory),
+        token = "",
+        context = LocalContext.current
     )
 }
 
