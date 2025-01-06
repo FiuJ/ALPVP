@@ -212,7 +212,8 @@ fun CommunitiesContent(
     ){
         Text(
             text = "Community List",
-            fontSize = 18.sp
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
 
         if(allCommunities.isNotEmpty()){
@@ -233,8 +234,8 @@ fun CommunitiesContent(
         else{
             Text(
                 text = "No Community Found!",
-                fontSize = 21.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal
             )
         }
 
@@ -246,7 +247,8 @@ fun CommunitiesContent(
 
         Text(
             text = "My Community",
-            fontSize = 18.sp
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
         if(communityById.isNotEmpty()){
             LazyColumn(
@@ -266,8 +268,8 @@ fun CommunitiesContent(
         else{
             Text(
                 text = "You need join a Community!",
-                fontSize = 21.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal
             )
         }
 
