@@ -12,11 +12,14 @@ import com.example.alpvp.repositories.CourseRepository
 import com.example.alpvp.repositories.NetworkAuthenticationRepository
 import com.example.alpvp.repositories.NetworkCommunityRepository
 import com.example.alpvp.repositories.NetworkCourseRepository
+import com.example.alpvp.repositories.NetworkPostRepository
 import com.example.alpvp.repositories.NetworkUserRepository
+import com.example.alpvp.repositories.PostRepository
 import com.example.alpvp.repositories.UserRepository
 import com.example.alpvp.services.AuthenticationAPIService
 import com.example.alpvp.services.CommunityAPIService
 import com.example.alpvp.services.CourseAPIService
+import com.example.alpvp.services.PostAPIService
 import com.example.alpvp.services.UserAPIService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -28,6 +31,7 @@ interface AppContainer {
     val userRepository: UserRepository
     val communityRepository: CommunityRepository
     val courseRepository: CourseRepository
+    val postRepository: PostRepository
 }
 
 
@@ -35,8 +39,8 @@ class DefaultAppContainer(
     private val userDataStore: DataStore<Preferences>
 ):AppContainer{
     //link baseurl
-//    private val baseUrl = "http://192.168.43.222:3000/"
-    private val baseUrl = "http://192.168.1.6:3000/"
+    private val baseUrl = "http://192.168.43.222:3000/"
+//    private val baseUrl = "http://192.168.1.6:3000/"
 
     //IP TEST
 
@@ -69,6 +73,11 @@ class DefaultAppContainer(
         retrofit.create(CommunityAPIService::class.java)
     }
 
+    private val postRetrofitService: PostAPIService by lazy {
+        val retrofit = initRetrofit()
+        retrofit.create(PostAPIService::class.java)
+    }
+
 
 
 
@@ -90,6 +99,9 @@ class DefaultAppContainer(
         NetworkCommunityRepository(communityRetrofitService)
     }
 
+    override val postRepository: PostRepository by lazy {
+        NetworkPostRepository(postRetrofitService)
+    }
 
 
 

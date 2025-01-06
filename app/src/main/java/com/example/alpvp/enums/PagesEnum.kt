@@ -5,8 +5,6 @@ enum class PagesEnum() {
     Register,
     Profile,
     Home,
-    CourseDetail
-//workout1
-//    CreateTodo,
-//    TodoDetail
+    CourseDetail,
+    Community,
 }

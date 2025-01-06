@@ -16,10 +16,13 @@ import com.example.alpvp.models.ErrorModel
 import com.example.alpvp.repositories.CommunityRepository
 import com.example.alpvp.repositories.UserRepository
 import com.example.alpvp.uiStates.CommunityStatusUIState
+import com.example.alpvp.uiStates.CourseDataStatusUIState
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,8 +33,30 @@ class CommunityViewModel(
     private val userRepository: UserRepository
 ): ViewModel() {
 
-    var uiState: CommunityStatusUIState by mutableStateOf(CommunityStatusUIState.Start)
+    val username: StateFlow<String> = userRepository.currentUsername.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ""
+    )
+
+    val token: StateFlow<String> = userRepository.currentUserToken.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ""
+    )
+
+    var dataStatus: CommunityStatusUIState by mutableStateOf(CommunityStatusUIState.Start)
         private set
+
+    private val _allCommunities = MutableStateFlow<List<CommunityModel>>(emptyList())
+    val allCommunities: StateFlow<List<CommunityModel>> = _allCommunities
+
+    private val _communitiesById = MutableStateFlow<List<CommunityModel>>(emptyList())
+    val communitiesById: StateFlow<List<CommunityModel>> = _communitiesById
+
+    fun clearDataErrorMessage() {
+        dataStatus = CommunityStatusUIState.Start
+    }
 
     private val _communities = MutableStateFlow<List<CommunityModel>>(emptyList())
     val communities: StateFlow<List<CommunityModel>> = _communities.asStateFlow()
@@ -97,9 +122,13 @@ class CommunityViewModel(
 //        }
 //    }
 
+    fun getUser(){
+
+    }
+
     fun getAllCommunities() {
         viewModelScope.launch {
-            uiState = CommunityStatusUIState.Loading
+            dataStatus = CommunityStatusUIState.Loading
             try {
                 // Collect the token from the `UserRepository`
                 userRepository.currentUserToken.collect { token ->
@@ -113,30 +142,30 @@ class CommunityViewModel(
                             if (response.isSuccessful) {
                                 val communityData = response.body()?.data ?: emptyList()
                                 _communities.value = communityData
-                                uiState = CommunityStatusUIState.Success()
+                                dataStatus = CommunityStatusUIState.Success(emptyList())
                             } else {
                                 val errorMessage = Gson().fromJson(
                                     response.errorBody()?.charStream(),
                                     ErrorModel::class.java
                                 )
-                                uiState = CommunityStatusUIState.Failed(errorMessage.errors)
+                                dataStatus = CommunityStatusUIState.Failed(errorMessage.errors)
                             }
                         }
 
                         override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
-                            uiState = CommunityStatusUIState.Failed(t.localizedMessage ?: "Unknown error")
+                            dataStatus = CommunityStatusUIState.Failed(t.localizedMessage ?: "Unknown error")
                         }
                     })
                 }
             } catch (e: Exception) {
-                uiState = CommunityStatusUIState.Failed(e.localizedMessage ?: "Unknown error")
+                dataStatus = CommunityStatusUIState.Failed(e.localizedMessage ?: "Unknown error")
             }
         }
     }
 
     fun getAllCommunitiesByUserId(userId: Int) {
         viewModelScope.launch {
-            uiState = CommunityStatusUIState.Loading
+            dataStatus = CommunityStatusUIState.Loading
             try {
                 // Collect the token from the `UserRepository`
                 userRepository.currentUserToken.collect { token ->
@@ -151,27 +180,28 @@ class CommunityViewModel(
                             if (response.isSuccessful) {
                                 // Update the list of communities in LiveData
                                 val communityData = response.body()?.data ?: emptyList()
-                                _communities.value = communityData
-                                uiState = CommunityStatusUIState.Success()
+                                _communitiesById.value = communityData
+//                                _communities.value = communityData
+                                dataStatus = CommunityStatusUIState.Success(emptyList())
                             } else {
                                 // Parse the error response
                                 val errorMessage = Gson().fromJson(
                                     response.errorBody()?.charStream(),
                                     ErrorModel::class.java
                                 )
-                                uiState = CommunityStatusUIState.Failed(errorMessage.errors)
+                                dataStatus = CommunityStatusUIState.Failed(errorMessage.errors)
                             }
                         }
 
                         override fun onFailure(call: Call<CommunityResponse>, t: Throwable) {
                             // Handle network or server failure
-                            uiState = CommunityStatusUIState.Failed(t.localizedMessage ?: "Unknown error")
+                            dataStatus = CommunityStatusUIState.Failed(t.localizedMessage ?: "Unknown error")
                         }
                     })
                 }
             } catch (e: Exception) {
                 // Handle unexpected exceptions
-                uiState = CommunityStatusUIState.Failed(e.localizedMessage ?: "Unknown error")
+                dataStatus = CommunityStatusUIState.Failed(e.localizedMessage ?: "Unknown error")
             }
         }
     }

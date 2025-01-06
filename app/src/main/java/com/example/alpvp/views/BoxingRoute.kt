@@ -32,6 +32,8 @@ fun BoxingApp(
 
     val localContext = LocalContext.current
     val token = profileViewModel.token.collectAsState()
+    val username = profileViewModel.username.collectAsState()
+    val id = profileViewModel.id.collectAsState()
 
     NavHost(navController = navController, startDestination = if(token.value != "Unknown" && token.value != "") {
         PagesEnum.Home.name
@@ -68,6 +70,16 @@ fun BoxingApp(
             Profile(
                 profileViewModel = viewModel(factory = ProfileViewModel.Factory),
                 navController = navController,
+                token = token.value,
+                context = localContext
+            )
+        }
+
+        composable(route = PagesEnum.Community.name) {
+            Community(
+                navController = navController,
+                communityViewModel = viewModel(factory = com.example.alpvp.viewModels.CommunityViewModel.Factory),
+                id = id.value,
                 token = token.value,
                 context = localContext
             )

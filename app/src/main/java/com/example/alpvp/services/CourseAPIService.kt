@@ -9,26 +9,14 @@ import retrofit2.http.*
 
 interface CourseAPIService {
     @POST("api/courses")
-    fun createCourse(
-        @Header("X-API-TOKEN") token: String,
-        @Body courseRequest: CourseRequest
-    ): Call<CourseModel>
+    fun createCourse(@Header("X-API-TOKEN") token: String, @Body courseRequest: CourseRequest): Call<CourseModel>
 
     @GET("api/courses")
-    fun getAllCourses(
-        @Header("X-API-TOKEN") token: String
-    ): Call<GetAllCourseResponse>
+    fun getAllCourses(@Header("X-API-TOKEN") token: String): Call<GetAllCourseResponse>
 
     @GET("api/courses/{courseId}")
-    fun getCourse(
-        @Header("X-API-TOKEN") token: String,
-        @Path("courseId") courseId: Int
-    ): Call<GetCourseResponse>
+    fun getCourse(@Header("X-API-TOKEN") token: String, @Path("courseId") courseId: Int): Call<GetCourseResponse>
 
     @PUT("api/courses/{courseId}")
-    fun updateCourse(
-        @Header("X-API-TOKEN") token: String,
-        @Path("courseId") courseId: Int,
-        @Body courseRequest: CourseRequest
-    ): Call<CourseModel>
+    fun updateCourse(@Header("X-API-TOKEN") token: String, @Path("courseId") courseId: Int, @Body courseRequest: CourseRequest): Call<CourseModel>
 }

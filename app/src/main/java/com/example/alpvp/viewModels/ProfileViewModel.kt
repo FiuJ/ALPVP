@@ -45,6 +45,12 @@ class ProfileViewModel (
         initialValue = ""
     )
 
+    val id: StateFlow<Int> = userRepository.currentUserId.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
+
     fun logoutUser(token: String, navController: NavHostController) {
         viewModelScope.launch {
             logoutStatus = StringDataStatusUIState.Loading
