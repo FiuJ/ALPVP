@@ -33,7 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
+import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.PostViewModel
 
 @Composable
@@ -46,7 +50,8 @@ fun MyPostListCard(
     postViewModel: PostViewModel,
     token: String,
     postId: Int,
-    id: Int
+    id: Int,
+    navController: NavHostController
 
 ){
 
@@ -165,7 +170,9 @@ fun MyPostListCard(
                             color = Color(0xFFE9602A),
                             fontSize = 17.sp,
                             modifier = Modifier
-                                .clickable {  } // go route Edit
+                                .clickable {
+                                    navController.navigate(PagesEnum.UpdatePost.name)
+                                }
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         Text(
@@ -204,6 +211,7 @@ fun MyPostListCardPreview(){
         postViewModel = viewModel(factory = PostViewModel.Factory),
         token = "",
         postId = 0,
-        id = 0
+        id = 0,
+        navController = rememberNavController()
     )
 }

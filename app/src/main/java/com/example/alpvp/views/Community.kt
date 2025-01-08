@@ -291,7 +291,8 @@ fun MyJournalContent(
                         postViewModel = viewModel(factory = PostViewModel.Factory),
                         token = token,
                         postId = post.post_id,
-                        id = id
+                        id = id,
+                        navController = rememberNavController()
                     )
                 }
             }

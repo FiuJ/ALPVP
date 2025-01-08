@@ -106,6 +106,14 @@ fun BoxingApp(
                 id = id.value
             )
         }
+        composable(route = PagesEnum.UpdatePost.name){
+            UpdatePost(
+                navController = navController,
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                token = token.value,
+                postId =
+            )
+        }
 
     }
 
