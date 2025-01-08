@@ -1,5 +1,6 @@
 package com.example.alpvp.views
 
+import android.graphics.pdf.PdfDocument.Page
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.AuthenticationViewModel
+import com.example.alpvp.viewModels.CommunityViewModel
+import com.example.alpvp.viewModels.PostViewModel
 import com.example.alpvp.viewModels.ProfileViewModel
 import com.example.alpvp.viewModels.Workout1DetailViewModel
 import com.example.alpvp.viewModels.Workout1ViewModel
@@ -24,7 +27,7 @@ import com.example.alpvp.viewModels.Workout1ViewModel
 fun BoxingApp(
     navController: NavHostController = rememberNavController(),
     authenticationViewModel: AuthenticationViewModel = viewModel(factory = AuthenticationViewModel.Factory),
-    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
 //    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 //    todoListFormViewModel: TodoListFormViewModel = viewModel(factory = TodoListFormViewModel.Factory),
 //    todoDetailViewModel: TodoDetailViewModel = viewModel(factory = TodoDetailViewModel.Factory)
@@ -34,6 +37,7 @@ fun BoxingApp(
     val token = profileViewModel.token.collectAsState()
     val username = profileViewModel.username.collectAsState()
     val id = profileViewModel.id.collectAsState()
+
 
     NavHost(navController = navController, startDestination = if(token.value != "Unknown" && token.value != "") {
         PagesEnum.Home.name
@@ -78,10 +82,28 @@ fun BoxingApp(
         composable(route = PagesEnum.Community.name) {
             Community(
                 navController = navController,
-                communityViewModel = viewModel(factory = com.example.alpvp.viewModels.CommunityViewModel.Factory),
+                communityViewModel = viewModel(factory = CommunityViewModel.Factory),
+                postViewModel = viewModel(factory = PostViewModel.Factory),
                 id = id.value,
                 token = token.value,
                 context = localContext
+            )
+        }
+
+        composable(route = PagesEnum.CommunityPost.name){
+            PostPublic(
+                navController = navController,
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                token = token.value,
+                id = id.value
+            )
+        }
+        composable(route = PagesEnum.CreatePost.name){
+            CreatePost(
+                navController = navController,
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                token = token.value,
+                id = id.value
             )
         }
 

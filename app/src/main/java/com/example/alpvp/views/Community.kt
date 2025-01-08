@@ -44,29 +44,38 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
+import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.models.CommunityModel
+import com.example.alpvp.models.PostModel
 import com.example.alpvp.uiStates.CommunityStatusUIState
 import com.example.alpvp.uiStates.CourseDataStatusUIState
 import com.example.alpvp.viewModels.CommunityViewModel
+import com.example.alpvp.viewModels.PostViewModel
 import com.example.alpvp.views.templates.AllCommunityListCard
+import com.example.alpvp.views.templates.MyPostListCard
+import com.example.alpvp.views.templates.PostListCard
 
 @Composable
 fun Community(
     navController: NavHostController,
     communityViewModel: CommunityViewModel,
+    postViewModel: PostViewModel,
     id: Int,
     token: String,
     context: Context
 ){
 
     val dataStatus = communityViewModel.dataStatus
-    var selectedTab by remember { mutableStateOf("Communities") }
+    var selectedTab by remember { mutableStateOf("My Journal") }
     val allCommunities = communityViewModel.allCommunities.collectAsState()
     val communityById = communityViewModel.communitiesById.collectAsState()
+
+    val myPost = postViewModel.postById.collectAsState()
 
     LaunchedEffect(Unit) {
         communityViewModel.getAllCommunities()
         communityViewModel.getAllCommunitiesByUserId(id)
+        postViewModel.getAllPostsByUser(token, id)
     }
 
     LaunchedEffect(dataStatus) {
@@ -166,12 +175,69 @@ fun Community(
                         text = "Communities"
                     )
                 }
+
             }
+        }
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+        ){
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = {
+                    navController.navigate(PagesEnum.CreatePost.name){
+                        popUpTo(PagesEnum.Community.name){
+                            inclusive = true
+                        }
+                    }
+                },//CREATE POST
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFE9602A),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "Create Post",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+            }
+        }
+        //BUTTON SEMENTARA BUAT CEK HALAMAN
+        Button(
+            onClick = {
+                navController.navigate(PagesEnum.Profile.name){
+
+                }
+            }
+        ) {
+            Text(
+                text = "Profile"
+            )
+        }
+        Button(
+            onClick = {
+                navController.navigate(PagesEnum.CommunityPost.name){
+
+                }
+            }
+        ) {
+            Text(
+                text = "All Public Post"
+            )
         }
 
 
         when(selectedTab){
-            "My Journal" -> MyJournalContent()
+            "My Journal" -> MyJournalContent(
+                myPost = myPost.value,
+                token = token,
+                id = id
+            )
             "Communities" -> CommunitiesContent(
                 dataStatus,
                 allCommunities = allCommunities.value,
@@ -184,15 +250,58 @@ fun Community(
 }
 
 @Composable
-fun MyJournalContent(){
+fun MyJournalContent(
+    myPost: List<PostModel>,
+    token: String,
+    id: Int
+){
     Column (
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
 
         ){
-        Row {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.Center
+        ){
+            Text(
+                text = "My Post",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
+        if (myPost.isNotEmpty()){
+            LazyColumn(
+                flingBehavior = ScrollableDefaults.flingBehavior(),
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .clip(RoundedCornerShape(10.dp))
+            ) {
+                items(myPost) { post ->
+                    MyPostListCard(
+                        Name = post.post_name,
+                        Description = post.post_description,
+                        Date = post.post_date,
+                        isPublic = post.isPublic,
+                        onCardClick = {},
+                        postViewModel = viewModel(factory = PostViewModel.Factory),
+                        token = token,
+                        postId = post.post_id,
+                        id = id
+                    )
+                }
+            }
+        }
+        else{
+            Text(
+                text = "Theres no post yet",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal
+            )
         }
 
     }
@@ -226,7 +335,8 @@ fun CommunitiesContent(
                 items(allCommunities) { community ->
                     AllCommunityListCard(
                         CommunityName = community.name,
-                        onCardClick = {} // Route ke Community
+                        onCardClick = {}, // Route ke Community
+                        navController = rememberNavController()
                     )
                 }
             }
@@ -260,7 +370,8 @@ fun CommunitiesContent(
                 items(communityById) { community ->
                     AllCommunityListCard(
                         CommunityName = community.name,
-                        onCardClick = {} // Route ke Community
+                        onCardClick = {}, // Route ke Community
+                        navController = rememberNavController()
                     )
                 }
             }
@@ -284,6 +395,7 @@ fun CommunityPreview(){
     Community(
         navController = rememberNavController(),
         communityViewModel = viewModel(factory = CommunityViewModel.Factory),
+        postViewModel = viewModel(factory = PostViewModel.Factory),
         id = 0,
         token = "",
         context = LocalContext.current

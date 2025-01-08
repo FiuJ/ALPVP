@@ -7,4 +7,6 @@ enum class PagesEnum() {
     Home,
     CourseDetail,
     Community,
+    CommunityPost,
+    CreatePost
 }

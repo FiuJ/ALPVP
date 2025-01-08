@@ -7,9 +7,11 @@ import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.alpvp.repositories.AuthenticationRepository
+import com.example.alpvp.repositories.CommentRepository
 import com.example.alpvp.repositories.CommunityRepository
 import com.example.alpvp.repositories.CourseRepository
 import com.example.alpvp.repositories.NetworkAuthenticationRepository
+import com.example.alpvp.repositories.NetworkCommentRepository
 import com.example.alpvp.repositories.NetworkCommunityRepository
 import com.example.alpvp.repositories.NetworkCourseRepository
 import com.example.alpvp.repositories.NetworkPostRepository
@@ -17,6 +19,7 @@ import com.example.alpvp.repositories.NetworkUserRepository
 import com.example.alpvp.repositories.PostRepository
 import com.example.alpvp.repositories.UserRepository
 import com.example.alpvp.services.AuthenticationAPIService
+import com.example.alpvp.services.CommentAPIService
 import com.example.alpvp.services.CommunityAPIService
 import com.example.alpvp.services.CourseAPIService
 import com.example.alpvp.services.PostAPIService
@@ -32,6 +35,7 @@ interface AppContainer {
     val communityRepository: CommunityRepository
     val courseRepository: CourseRepository
     val postRepository: PostRepository
+    val commentRepository: CommentRepository
 }
 
 
@@ -78,6 +82,12 @@ class DefaultAppContainer(
         retrofit.create(PostAPIService::class.java)
     }
 
+    private val commentRetrofitService: CommentAPIService by lazy {
+        val retrofit = initRetrofit()
+        retrofit.create(CommentAPIService::class.java)
+    }
+
+
 
 
 
@@ -101,6 +111,10 @@ class DefaultAppContainer(
 
     override val postRepository: PostRepository by lazy {
         NetworkPostRepository(postRetrofitService)
+    }
+
+    override val commentRepository: CommentRepository by lazy {
+        NetworkCommentRepository(commentRetrofitService, userRepository)
     }
 
 

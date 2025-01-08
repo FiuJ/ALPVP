@@ -122,9 +122,7 @@ class CommunityViewModel(
 //        }
 //    }
 
-    fun getUser(){
 
-    }
 
     fun getAllCommunities() {
         viewModelScope.launch {
