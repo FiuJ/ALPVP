@@ -171,7 +171,7 @@ fun MyPostListCard(
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .clickable {
-                                    navController.navigate(PagesEnum.UpdatePost.name)
+                                    navController.navigate(PagesEnum.UpdatePost.name+"/$postId")
                                 }
                         )
                         Spacer(modifier = Modifier.width(20.dp))

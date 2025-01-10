@@ -4,9 +4,6 @@ data class GetAllPostResponse(
     val data: List<PostModel>
 )
 
-data class GetPostResponse(
-    val data: PostModel
-)
 
 data class PostModel(
     val post_id: Int = 0,

@@ -12,9 +12,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.AuthenticationViewModel
 import com.example.alpvp.viewModels.CommunityViewModel
@@ -28,6 +30,7 @@ fun BoxingApp(
     navController: NavHostController = rememberNavController(),
     authenticationViewModel: AuthenticationViewModel = viewModel(factory = AuthenticationViewModel.Factory),
     profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
+    postViewModel: PostViewModel = viewModel(factory = PostViewModel.Factory),
 //    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 //    todoListFormViewModel: TodoListFormViewModel = viewModel(factory = TodoListFormViewModel.Factory),
 //    todoDetailViewModel: TodoDetailViewModel = viewModel(factory = TodoDetailViewModel.Factory)
@@ -106,12 +109,32 @@ fun BoxingApp(
                 id = id.value
             )
         }
-        composable(route = PagesEnum.UpdatePost.name){
+//        composable(route = PagesEnum.UpdatePost.name + "/{id}", arguments = listOf(
+//            navArgument(name = "id") {
+//                type = NavType.IntType
+//            }
+//        )){
+//            val id = backStackEntry.arguments?.getInt("id")
+//            UpdatePost(
+//                navController = navController,
+//                postViewModel = viewModel(factory = PostViewModel.Factory),
+//                token = token.value,
+//                postId =
+//            )
+//        }
+        composable(route = PagesEnum.UpdatePost.name + "/{postId}",
+            arguments = listOf(
+                navArgument(name = "postId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getInt("postId")
             UpdatePost(
                 navController = navController,
-                postViewModel = viewModel(factory = PostViewModel.Factory),
+                postViewModel = postViewModel,
                 token = token.value,
-                postId =
+                postId = postId!!
             )
         }
 

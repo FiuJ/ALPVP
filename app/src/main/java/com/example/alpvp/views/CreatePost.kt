@@ -12,14 +12,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -54,7 +62,6 @@ fun CreatePost(
     token: String,
     id: Int
 ){
-    var isPublic by remember { mutableStateOf(false) }
 
     Column (
         modifier = Modifier
@@ -159,50 +166,94 @@ fun CreatePost(
                 singleLine = false
             )
 
+            Text(
+                text = "Make Post Public?",
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth(),
+                fontWeight = FontWeight.Medium
+            )
+
+
+//            Row(
+//                modifier = Modifier
+//                    .padding(vertical = 8.dp)
+//                    .fillMaxWidth(),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceEvenly
+//            ) {
+//                Row (
+//                    modifier = Modifier,
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.Center
+//                ){
+//                    RadioButton(
+//                        selected = postViewModel.isPublicInput,
+//                        onClick = { postViewModel.setIsPublic(true) },
+//                        colors = RadioButtonDefaults.colors(selectedColor = Color.Blue)
+//                    )
+//                    Text(
+//                        text = "True",
+//                        fontSize = 16.sp,
+//                        modifier = Modifier
+////                            .clickable { postViewModel.setIsPublic(true) }
+//                    )
+//                }
+//
+//                Row (
+//                    modifier = Modifier,
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.Center
+//                ){
+//                    RadioButton(
+//                        selected = !postViewModel.isPublicInput,
+//                        onClick = { postViewModel.setIsPublic(false) },
+//                        colors = RadioButtonDefaults.colors(selectedColor = Color.Blue)
+//                    )
+//                    Text(
+//                        text = "False",
+//                        fontSize = 16.sp,
+//                        modifier = Modifier
+////                            .clickable { postViewModel.setIsPublic(false) }
+//                    )
+//                }
+//
+//            }
 
             Row(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Row (
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
-                    RadioButton(
-                        selected = postViewModel.isPublicInput,
-                        onClick = { postViewModel.setIsPublic(true) },
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Blue)
+                Switch(
+                    checked = postViewModel.isPublicInput,
+                    onCheckedChange = { postViewModel.setIsPublic(it) },
+                    thumbContent = if (postViewModel.isPublicInput) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                            )
+                        }
+                    } else {
+                        null
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
                     )
-                    Text(
-                        text = "True",
-                        fontSize = 16.sp,
-                        modifier = Modifier
-//                            .clickable { postViewModel.setIsPublic(true) }
-                    )
-                }
+                )
 
-                Row (
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
-                    RadioButton(
-                        selected = !postViewModel.isPublicInput,
-                        onClick = { postViewModel.setIsPublic(false) },
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Blue)
-                    )
-                    Text(
-                        text = "False",
-                        fontSize = 16.sp,
-                        modifier = Modifier
-//                            .clickable { postViewModel.setIsPublic(false) }
-                    )
-                }
-
+                Text(
+                    text = if (postViewModel.isPublicInput) "Public" else "Private",
+                    fontSize = 16.sp
+                )
             }
 
             Button(

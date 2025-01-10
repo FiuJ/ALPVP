@@ -70,6 +70,8 @@ class PostViewModel (
         return dateFormat.format(currentDate)
     }
 
+    var postId: Int by mutableStateOf(0)
+        private set
 
 
     var post_name_input: String by mutableStateOf("")
@@ -227,6 +229,10 @@ class PostViewModel (
 //    fun getPostById(postId: Int) {
 //        viewModelScope.launch {}
 //    }
+
+    fun update(id: Int) {
+        postId = id
+    }
 
 
     fun updatePost(token: String, id: Int, navController: NavHostController) {

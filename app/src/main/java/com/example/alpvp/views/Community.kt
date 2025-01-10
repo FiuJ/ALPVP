@@ -287,7 +287,9 @@ fun MyJournalContent(
                         Description = post.post_description,
                         Date = post.post_date,
                         isPublic = post.isPublic,
-                        onCardClick = {},
+                        onCardClick = {
+
+                        },
                         postViewModel = viewModel(factory = PostViewModel.Factory),
                         token = token,
                         postId = post.post_id,
