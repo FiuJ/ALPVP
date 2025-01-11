@@ -23,15 +23,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
+import com.example.alpvp.enums.PagesEnum
 
 @Composable
 fun MyCommunityListCard(
     CommunityName: String,
     Description: String,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
+    navController: NavHostController
 ){
     Card(
+        modifier = Modifier
+            .padding(bottom = 4.dp),
         onClick = onCardClick,
     ) {
         Row (
@@ -79,7 +86,11 @@ fun MyCommunityListCard(
 
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(PagesEnum.CommunityPost.name){
+
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFFFFF),
                         contentColor = Color(0xFFE9602A)
@@ -102,6 +113,7 @@ fun MyCommunityListCardPreview(){
     MyCommunityListCard(
         CommunityName = "Boxing Hit",
         Description = "Boxing training to motivated people",
-        onCardClick = {}
+        onCardClick = {},
+        navController = rememberNavController()
     )
 }

@@ -179,34 +179,38 @@ fun Community(
             }
         }
 
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 12.dp),
-        ){
-            Button(
+        if(selectedTab == "My Journal"){
+            Row (
                 modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = {
-                    navController.navigate(PagesEnum.CreatePost.name){
-                        popUpTo(PagesEnum.Community.name){
-                            inclusive = true
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+            ){
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        navController.navigate(PagesEnum.CreatePost.name){
+                            popUpTo(PagesEnum.Community.name){
+                                inclusive = true
+                            }
                         }
-                    }
-                },//CREATE POST
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFE9602A),
-                    contentColor = Color.White
-                )
-            ) {
-                Text(
-                    text = "Create Post",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White
-                )
+                    },//CREATE POST
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFE9602A),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(
+                        text = "Create Post",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White
+                    )
+                }
             }
         }
+
+
         //BUTTON SEMENTARA BUAT CEK HALAMAN
         Button(
             onClick = {
@@ -219,17 +223,7 @@ fun Community(
                 text = "Profile"
             )
         }
-        Button(
-            onClick = {
-                navController.navigate(PagesEnum.CommunityPost.name){
 
-                }
-            }
-        ) {
-            Text(
-                text = "All Public Post"
-            )
-        }
 
 
         when(selectedTab){
@@ -241,7 +235,27 @@ fun Community(
             "Communities" -> CommunitiesContent(
                 dataStatus,
                 allCommunities = allCommunities.value,
-                communityById = communityById.value
+                communityById = communityById.value,
+                navController = navController
+            )
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            onClick = {
+                navController.navigate(PagesEnum.CommunityPost.name){
+
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFE9602A),
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                text = "All Public Post"
             )
         }
 
@@ -314,7 +328,8 @@ fun MyJournalContent(
 fun CommunitiesContent(
     dataStatus: CommunityStatusUIState,
     allCommunities: List<CommunityModel>,
-    communityById: List<CommunityModel>
+    communityById: List<CommunityModel>,
+    navController: NavHostController
 ){
     Column (
         modifier = Modifier
@@ -338,7 +353,11 @@ fun CommunitiesContent(
                 items(allCommunities) { community ->
                     AllCommunityListCard(
                         CommunityName = community.name,
-                        onCardClick = {}, // Route ke Community
+                        onCardClick = {
+                            navController.navigate(PagesEnum.CommunityPost.name){
+
+                            }
+                        }, // Route ke Community
                         navController = rememberNavController()
                     )
                 }
@@ -373,8 +392,10 @@ fun CommunitiesContent(
                 items(communityById) { community ->
                     AllCommunityListCard(
                         CommunityName = community.name,
-                        onCardClick = {}, // Route ke Community
-                        navController = rememberNavController()
+                        onCardClick = {
+                            navController.navigate(PagesEnum.CommunityPost.name)
+                        }, // Route ke Community
+                        navController = navController
                     )
                 }
             }

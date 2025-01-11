@@ -43,7 +43,8 @@ class DefaultAppContainer(
     private val userDataStore: DataStore<Preferences>
 ):AppContainer{
     //link baseurl
-    private val baseUrl = "http://192.168.43.222:3000/"
+    private val baseUrl = "http://192.168.181.222:3000/"
+//    private val baseUrl = "http://192.168.43.222:3000/"
 //    private val baseUrl = "http://192.168.1.6:3000/"
 
     //IP TEST

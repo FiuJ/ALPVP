@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.enums.PagesEnum
@@ -32,7 +33,9 @@ fun AllCommunityListCard(
     navController: NavHostController
 ){
     Card(
-        onClick = {navController.navigate(PagesEnum.CommunityPost.name)}
+        modifier = Modifier
+            .padding(bottom = 4.dp),
+        onClick = onCardClick
     ) {
         Row (
             modifier = Modifier
@@ -54,7 +57,9 @@ fun AllCommunityListCard(
                 )
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        onCardClick
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF3F1EF),
                         contentColor = Color(0xFFE9602A)

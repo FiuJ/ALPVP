@@ -139,7 +139,7 @@ class CommunityViewModel(
                         ) {
                             if (response.isSuccessful) {
                                 val communityData = response.body()?.data ?: emptyList()
-                                _communities.value = communityData
+                                _allCommunities.value = communityData
                                 dataStatus = CommunityStatusUIState.Success(emptyList())
                             } else {
                                 val errorMessage = Gson().fromJson(
