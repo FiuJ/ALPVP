@@ -3,6 +3,7 @@ package com.example.alpvp.views.templates
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,12 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,17 +35,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alpvp.R
+import com.example.alpvp.viewModels.CommentViewModel
 
 @Composable
 fun PostListCard(
     Name: String,
     Description: String,
     Date: String,
-    onCardClick: () -> Unit
-
+    onCardClick: () -> Unit,
+//    commentViewModel: CommentViewModel,
+//    post_id: Int
 ){
     val isLike = remember { mutableStateOf(false) }
+
+//    val comments = commentViewModel.comment.collectAsState()
+//
+//    LaunchedEffect(Unit) {
+//        commentViewModel.getAllCommentsByPost(post_id)
+//    }
+
     Card(
         onClick = onCardClick,
         modifier = Modifier.padding(bottom = 4.dp)
@@ -143,9 +159,27 @@ fun PostListCard(
                     )
                 }
             }
-            Column {
-                //Buat Lazy Comment, bawahnya lazy ada form add Comment
-            }
+//            if(comments.value.isNotEmpty()){
+//                Column {
+//                    //Buat Lazy Comment, bawahnya lazy ada form add Comment
+//                    LazyColumn(
+//                        flingBehavior = ScrollableDefaults.flingBehavior(),
+//                        modifier = Modifier
+//                            .padding(vertical = 8.dp)
+//                            .clip(RoundedCornerShape(10.dp))
+//                    ) {
+//                        items(comments.value) { comments ->
+//                            CommentListCard(
+//                                Name = comments.username,
+//                                Comment = comments.comment,
+//                                Date = comments.comment_date,
+//                                onCardClick = {}
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+
 
         }
 
@@ -156,9 +190,11 @@ fun PostListCard(
 @Composable
 fun PostListCardPreview(){
     PostListCard(
-        Name = "Gabriella",
+        Name = "Gabriella Austin",
         Description = "I feel great trying boxing for the first time! Such a thrilling experience",
         Date = "28 December 2024",
-        onCardClick = {}
+        onCardClick = {},
+//        commentViewModel = viewModel(factory = CommentViewModel.Factory),
+//        post_id = 0
     )
 }

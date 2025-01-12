@@ -1,5 +1,6 @@
 package com.example.alpvp.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,8 @@ fun UpdatePost(
     postId: Int
 ){
     var isPublic by remember { mutableStateOf(false) }
+
+    Log.d("UpdatePost", "postId: $postId")
 
     Column (
         modifier = Modifier

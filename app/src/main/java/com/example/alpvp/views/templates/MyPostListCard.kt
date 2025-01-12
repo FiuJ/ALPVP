@@ -1,5 +1,6 @@
 package com.example.alpvp.views.templates
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -171,8 +172,13 @@ fun MyPostListCard(
                             fontSize = 17.sp,
                             modifier = Modifier
                                 .clickable {
-                                    navController.navigate(PagesEnum.UpdatePost.name+"/$postId")
+                                    Log.d("MyPostListCard", "postId: $postId")
+                                    postViewModel.savePostId(postId)
+                                    Log.d("MyPostListCard", "postId: $postId")
+//                                    navController.navigate(PagesEnum.UpdatePost.name)
+                                    postViewModel.goesToUpdate(navController)
                                 }
+
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         Text(

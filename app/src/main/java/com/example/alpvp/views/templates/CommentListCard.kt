@@ -39,7 +39,6 @@ fun CommentListCard(
     onCardClick: () -> Unit
 
 ){
-    val isLike = remember { mutableStateOf(false) }
     Card(
         onClick = onCardClick,
     ) {

@@ -2,7 +2,12 @@ package com.example.alpvp.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.alpvp.BoxingApplication
 import com.example.alpvp.models.CommentModel
 import com.example.alpvp.models.CommentResponse
 import com.example.alpvp.models.ErrorModel
@@ -71,6 +76,16 @@ class CommentViewModel(
         val response = commentRepository.createComment(token, postId, content)
     }
 
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as BoxingApplication)
+                val commentRepository = application.container.commentRepository
+                val userRepository = application.container.userRepository
+                CommentViewModel(commentRepository, userRepository)
+            }
+        }
+    }
 
 
 
