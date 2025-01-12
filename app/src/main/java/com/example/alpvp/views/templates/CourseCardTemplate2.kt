@@ -1,5 +1,6 @@
 package com.example.alpvp.views.templates
 
+
 import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.alpvp.R
 
 @Composable
-fun CourseCardTemplate(
+fun CourseCardTemplate2(
     title: String,
     course_duration: Int,
     modifier: Modifier = Modifier,
@@ -91,8 +92,8 @@ fun CourseCardTemplate(
     showSystemUi = true
 )
 @Composable
-fun CourseCardTemplatePreview() {
-    CourseCardTemplate(
+fun CourseCardTemplatePreview2() {
+    CourseCardTemplate2(
         title = "Cardio Workout",
         course_duration = 12,
         modifier = Modifier

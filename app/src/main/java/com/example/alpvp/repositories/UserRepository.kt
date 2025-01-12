@@ -3,6 +3,7 @@ package com.example.alpvp.repositories
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.alpvp.models.GeneralResponseModel
 import com.example.alpvp.services.UserAPIService
@@ -14,12 +15,20 @@ import retrofit2.Call
 interface UserRepository {
     val currentUserToken: Flow<String>
     val currentUsername: Flow<String>
+    val currentUserID: Flow<Int>
 
     fun logout(token: String): Call<GeneralResponseModel>
 
     suspend fun saveUserToken(token: String)
 
     suspend fun saveUsername(username: String)
+
+    suspend fun saveUserID(id: Int)
+
+    fun emergencyLogout(token: String): Call<GeneralResponseModel>
+
+
+//    fun getUserIdFromToken(token: String): Call<GeneralResponseModel>
 }
 
 class NetworkUserRepository(
@@ -29,6 +38,11 @@ class NetworkUserRepository(
     private companion object {
         val USER_TOKEN = stringPreferencesKey("token")
         val USERNAME = stringPreferencesKey("username")
+        val USER_ID = intPreferencesKey("user_id")
+    }
+
+    override val currentUserID: Flow<Int> = userDataStore.data.map { preferences ->
+        preferences[USER_ID]?.toInt() ?: 0
     }
 
     override val currentUserToken: Flow<String> = userDataStore.data.map { preferences ->
@@ -45,6 +59,12 @@ class NetworkUserRepository(
         }
     }
 
+    override suspend fun saveUserID(id: Int) {
+        userDataStore.edit { preferences ->
+            preferences[USER_ID] = id
+        }
+    }
+
     override suspend fun saveUsername(username: String) {
         userDataStore.edit { preferences ->
             preferences[USERNAME] = username
@@ -54,4 +74,13 @@ class NetworkUserRepository(
     override fun logout(token: String): Call<GeneralResponseModel> {
         return userAPIService.logout(token)
     }
+
+    override fun emergencyLogout(token: String): Call<GeneralResponseModel> {
+        return userAPIService.emergencyLogout(token) // New method added
+    }
+
+//    override fun getUserIdFromToken(token: String): Call<GeneralResponseModel> {
+//        return userAPIService.getUserIdFromToken("$token") // Use Bearer format
+//    }
+
 }
