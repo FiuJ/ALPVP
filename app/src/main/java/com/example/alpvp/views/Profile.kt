@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.alpvp.R
 import com.example.alpvp.uiStates.StringDataStatusUIState
 import com.example.alpvp.viewModels.ProfileViewModel
+import android.util.Log
 
 @Composable
 fun Profile(
@@ -47,6 +48,7 @@ fun Profile(
     context: Context
 ){
     val username = profileViewModel.username.collectAsState()
+    Log.d("token-profile", "TOKEN: ${token}")
     val logoutStatus = profileViewModel.logoutStatus
 
     LaunchedEffect(logoutStatus) {

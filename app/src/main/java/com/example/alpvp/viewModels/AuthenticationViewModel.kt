@@ -120,11 +120,21 @@ class AuthenticationViewModel (
         return Color.LightGray
     }
 
+
+    fun saveUsernameToken(token: String, username: String, id: Int) {
+        viewModelScope.launch {
+            userRepository.saveUserToken(token)
+            userRepository.saveUsername(username)
+            userRepository.saveUserID(user_id)
+        }
+    }
+
     fun saveUsernameTokenId(token: String, username: String, id: Int) {
         viewModelScope.launch {
             userRepository.saveUserToken(token)
             userRepository.saveUsername(username)
             userRepository.saveUserId(id)
+
         }
     }
 
@@ -164,7 +174,13 @@ class AuthenticationViewModel (
                         if (res.isSuccessful) {
                             Log.d("response-data", "RESPONSE DATA: ${res.body()}")
 
+
+                            saveUsernameToken(res.body()!!.data.token!!, res.body()!!.data.username,
+                                res.body()!!.data.id
+                            )
+
                             saveUsernameTokenId(res.body()!!.data.token!!, res.body()!!.data.username, res.body()!!.data.id)
+
 
                             dataStatus = AuthenticationStatusUIState.Success(res.body()!!.data)
 
@@ -210,7 +226,11 @@ class AuthenticationViewModel (
                 call.enqueue(object: Callback<UserResponse> {
                     override fun onResponse(call: Call<UserResponse>, res: Response<UserResponse>) {
                         if (res.isSuccessful) {
+
+                            saveUsernameToken(res.body()!!.data.token!!, res.body()!!.data.username, res.body()!!.data.id)
+
                             saveUsernameTokenId(res.body()!!.data.token!!, res.body()!!.data.username, res.body()!!.data.id)
+
 
                             dataStatus = AuthenticationStatusUIState.Success(res.body()!!.data)
 

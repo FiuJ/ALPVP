@@ -10,32 +10,53 @@ import com.example.alpvp.repositories.AuthenticationRepository
 import com.example.alpvp.repositories.CommentRepository
 import com.example.alpvp.repositories.CommunityRepository
 import com.example.alpvp.repositories.CourseRepository
+import com.example.alpvp.repositories.CourseUserRepository
+import com.example.alpvp.repositories.CourseWorkoutRepository
 import com.example.alpvp.repositories.NetworkAuthenticationRepository
 import com.example.alpvp.repositories.NetworkCommentRepository
 import com.example.alpvp.repositories.NetworkCommunityRepository
 import com.example.alpvp.repositories.NetworkCourseRepository
+
+import com.example.alpvp.repositories.NetworkCourseUserRepository
+import com.example.alpvp.repositories.NetworkCourseWorkoutRepository
+import com.example.alpvp.repositories.NetworkUserRepository
+import com.example.alpvp.repositories.NetworkWorkoutRepository
 import com.example.alpvp.repositories.NetworkPostRepository
 import com.example.alpvp.repositories.NetworkUserRepository
 import com.example.alpvp.repositories.PostRepository
+
 import com.example.alpvp.repositories.UserRepository
+import com.example.alpvp.repositories.WorkoutRepository
 import com.example.alpvp.services.AuthenticationAPIService
 import com.example.alpvp.services.CommentAPIService
 import com.example.alpvp.services.CommunityAPIService
 import com.example.alpvp.services.CourseAPIService
+
+import com.example.alpvp.services.CourseUserAPIService
+import com.example.alpvp.services.CourseWorkoutAPIService
+
 import com.example.alpvp.services.PostAPIService
+
 import com.example.alpvp.services.UserAPIService
+import com.example.alpvp.services.WorkoutAPIService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 interface AppContainer {
     val authenticationRepository: AuthenticationRepository
     val userRepository: UserRepository
     val communityRepository: CommunityRepository
     val courseRepository: CourseRepository
+    val courseWorkoutRepository: CourseWorkoutRepository
+    val workoutRepository: WorkoutRepository
+    val courseUserRepository: CourseUserRepository
+
     val postRepository: PostRepository
     val commentRepository: CommentRepository
+
 }
 
 
@@ -48,7 +69,6 @@ class DefaultAppContainer(
 //    private val baseUrl = "http://192.168.1.6:3000/"
 
     //IP TEST
-
 //    private val authenticationRetrofitService: AuthenticationAPIService by lazy {
 //        val retrofit = initRetrofit()
 //
@@ -56,6 +76,17 @@ class DefaultAppContainer(
 //    }
 
     //retrofit disini
+
+    private val courseUserRetrofitService: CourseUserAPIService by lazy {
+        val retrofit = initRetrofit()
+        retrofit.create(CourseUserAPIService::class.java)
+    }
+
+    private val workoutRetrofitService: WorkoutAPIService by lazy {
+        val retrofit = initRetrofit()
+        retrofit.create(WorkoutAPIService::class.java)
+    }
+
     private val authenticationRetrofitService: AuthenticationAPIService by lazy {
         val retrofit = initRetrofit()
 
@@ -78,6 +109,14 @@ class DefaultAppContainer(
         retrofit.create(CommunityAPIService::class.java)
     }
 
+
+    private val courseWorkoutRetrofitService: CourseWorkoutAPIService by lazy {
+        val retrofit = initRetrofit()
+
+        retrofit.create(CourseWorkoutAPIService::class.java)
+    }
+
+
     private val postRetrofitService: PostAPIService by lazy {
         val retrofit = initRetrofit()
         retrofit.create(PostAPIService::class.java)
@@ -93,7 +132,20 @@ class DefaultAppContainer(
 
 
 
+
     //repository init disini
+
+    override val courseUserRepository: CourseUserRepository by lazy {
+        NetworkCourseUserRepository(courseUserRetrofitService)
+    }
+
+    override val workoutRepository: WorkoutRepository by lazy {
+        NetworkWorkoutRepository(workoutRetrofitService)
+    }
+
+    override val courseWorkoutRepository: CourseWorkoutRepository by lazy {
+        NetworkCourseWorkoutRepository(courseWorkoutRetrofitService)
+    }
     override val authenticationRepository: AuthenticationRepository by lazy {
         NetworkAuthenticationRepository(authenticationRetrofitService)
     }
@@ -117,9 +169,6 @@ class DefaultAppContainer(
     override val commentRepository: CommentRepository by lazy {
         NetworkCommentRepository(commentRetrofitService, userRepository)
     }
-
-
-
 
     private fun initRetrofit(): Retrofit {
         val logging = HttpLoggingInterceptor()
