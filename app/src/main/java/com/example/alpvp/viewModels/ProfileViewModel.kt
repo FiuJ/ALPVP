@@ -45,7 +45,10 @@ class ProfileViewModel (
         initialValue = ""
     )
 
+    val user_id: StateFlow<Int> = userRepository.currentUserID.stateIn(
+
     val id: StateFlow<Int> = userRepository.currentUserId.stateIn(
+
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = 0
@@ -95,16 +98,9 @@ class ProfileViewModel (
         }
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as BoxingApplication)//bawaan
-                val userRepository = application.container.userRepository
-                //tambahkan function sesuai fitur
-                ProfileViewModel(userRepository)
-            }
-        }
-    }
+
+
+
 
     fun saveUsernameToken(token: String, username: String) {
         viewModelScope.launch {
@@ -116,5 +112,18 @@ class ProfileViewModel (
     fun clearLogoutErrorMessage() {
         logoutStatus = StringDataStatusUIState.Start
     }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as BoxingApplication)//bawaan
+                val userRepository = application.container.userRepository
+                //tambahkan function sesuai fitur
+                ProfileViewModel(userRepository)
+            }
+        }
+    }
+
+
 
 }

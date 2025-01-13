@@ -1,5 +1,6 @@
 package com.example.alpvp.views
 
+
 import android.R.attr.onClick
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -43,40 +44,42 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewModelScope
 import com.example.alpvp.uiStates.CourseDetailDataStatusUIState
+import com.example.alpvp.uiStates.WorkoutDataStatesUIState
+import com.example.alpvp.viewModels.DetailWorkoutViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Workout1DetailView(
+fun DetailWorkout(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     token: String,
-    workout1DetailViewModel: Workout1DetailViewModel,
+    detailWorkoutViewModel: DetailWorkoutViewModel,
     context: Context,
-    course_id: Int,
+    workout_id: Int,
     user_id: Int
 ) {
     Log.d("UID Check", "Current UID early in UI: $user_id")
+    Log.d("WID Check", "Current UID early in UI: $workout_id")
 
-    val dataStatus = workout1DetailViewModel.dataStatus
+    val remainingTime = detailWorkoutViewModel.remainingTime
+    val isTimerRunning = detailWorkoutViewModel.isTimerRunning
 
-    workout1DetailViewModel.getCourse1(token, course_id, false )
-    Log.d("Workout1DetailView", "Current dataStatus early in UI: $dataStatus")
+    val dataStatus = detailWorkoutViewModel.dataStatusWorkout
+    detailWorkoutViewModel.getWorkoutbyWorkoutIdDuplicate(token, workout_id)
 
     LaunchedEffect(dataStatus) {
-        if (dataStatus is CourseDetailDataStatusUIState.Failed) {
+        if (dataStatus is WorkoutDataStatesUIState.Failed) {
             Toast.makeText(context, dataStatus.errorMessage, Toast.LENGTH_SHORT).show()
-            workout1DetailViewModel.clearErrorMessage()
+            detailWorkoutViewModel.clearErrorMessage()
         }
     }
-
-    Log.d("Workout1DetailView", "Current tokn: $token")
 
 
     // Header
     Column(
         modifier = modifier
-            .fillMaxSize() 
+            .fillMaxSize()
     ) {
         Row (
             modifier = Modifier
@@ -100,7 +103,7 @@ fun Workout1DetailView(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Detail",
+                    text = "Detail Workout",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White
@@ -110,19 +113,19 @@ fun Workout1DetailView(
 
         // Image Section
         Image(
-            painter = painterResource(id = R.drawable.boxing),
+            painter = painterResource(id = R.drawable.squat),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp) // Set a fixed height to avoid stretching
-              ,
+            ,
             contentScale = ContentScale.Crop
         )
 
         // Handling different states of dataStatus
         when (dataStatus) {
             //why dataStatus is not Success?
-            is CourseDetailDataStatusUIState.Success -> {
+            is WorkoutDataStatesUIState.Success -> {
                 // Display details from the success state
                 Column(
                     modifier = Modifier
@@ -131,7 +134,7 @@ fun Workout1DetailView(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = dataStatus.data.detail_course,
+                        text = dataStatus.data.name_workout,
                         fontSize = 35.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
@@ -141,18 +144,96 @@ fun Workout1DetailView(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Train every day for " + dataStatus.data.detail_course + " days",
+                        text = "Your Duration is for " + dataStatus.data.workout_duration + " mins",
                         fontSize = 15.sp,
                         color = Color.DarkGray
                     )
+                    Text(
+                        text = "Time Left: ${remainingTime / 60}:${String.format("%02d", remainingTime % 60)}",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Timer Control Buttons
+                    Row {
+                        Button(
+                            onClick = {
+                                detailWorkoutViewModel.startTimer(dataStatus.data.workout_duration)
+                            },
+                            enabled = !isTimerRunning
+                        ) {
+                            Text("Start Timer")
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Button(
+                            onClick = { detailWorkoutViewModel.stopTimer() },
+                            enabled = isTimerRunning
+                        ) {
+                            Text("Stop Timer")
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ){
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(20.dp))
+                                .fillMaxWidth()
+                                .background(color = Color.White)
+                                .padding(12.dp)
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Getting started",
+                                    fontSize = 18.sp
+                                )
 
+                                Text(
+                                    text = "to get the most mentally and physically,",
+                                    fontSize = 13.sp,
+                                    modifier = Modifier
+                                        .padding(top = 8.dp),
+                                    color = Color.DarkGray
+                                )
+                                Text(
+                                    text = "you need to do these:",
+                                    fontSize = 13.sp,
+                                    color = Color.DarkGray
+                                )
+
+                                Row(
+                                    modifier = Modifier
+                                        .padding(top = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.baseline_search_24),
+                                        contentDescription = "",
+                                        colorFilter = ColorFilter.tint(Color.Black),
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = dataStatus.data.detail_workout,
+                                        fontSize = 15.sp,
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
-            is CourseDetailDataStatusUIState.Loading -> {
+            is WorkoutDataStatesUIState.Loading -> {
                 Text(
                     text = "Loading...",
                     color = Color.Black,
@@ -161,7 +242,7 @@ fun Workout1DetailView(
                 )
             }
 
-            is CourseDetailDataStatusUIState.Failed -> {
+            is WorkoutDataStatesUIState.Failed -> {
                 Log.d("Workout1DetailView", "Current dataStatus in UI: $dataStatus")
                 Text(
                     text = "Error loading data.",
@@ -181,133 +262,26 @@ fun Workout1DetailView(
                 )
             }
         }
-        Column(
-            modifier = Modifier
-                .padding(12.dp)
-        ){
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .fillMaxWidth()
-                    .background(color = Color.White)
-                    .padding(12.dp)
-            ){
-                Column {
-                    Text(
-                        text = "Getting started",
-                        fontSize = 18.sp
-                    )
 
-                    Text(
-                        text = "to get the most mentally and physically,",
-                        fontSize = 13.sp,
-                        modifier = Modifier
-                            .padding(top = 8.dp),
-                        color = Color.DarkGray
-                    )
-                    Text(
-                        text = "you need to do these:",
-                        fontSize = 13.sp,
-                        color = Color.DarkGray
-                    )
-
-                    Row (
-                        modifier = Modifier
-                            .padding(top = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Image(
-                            painter = painterResource(id = R.drawable.baseline_search_24),
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(Color.Black),
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Join the class you are interested the most",
-                            fontSize = 15.sp,
-                            color = Color.Black
-                        )
-                    }
-
-                    Row (
-                        modifier = Modifier
-                            .padding(top = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Image(
-                            painter = painterResource(id = R.drawable.baseline_search_24),
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(Color.Black),
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Join the community suits you",
-                            fontSize = 15.sp,
-                            color = Color.Black
-                        )
-                    }
-
-                    Row (
-                        modifier = Modifier
-                            .padding(top = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Image(
-                            painter = painterResource(id = R.drawable.baseline_search_24),
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(Color.Black),
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Turn on notification ",
-                            fontSize = 15.sp,
-                            color = Color.Black
-                        )
-                    }
-
-//                    onCardClick = {
-//                        workout1DetailViewModel.getCourse(token, course.course_id,navController, false )
-//                    }
-                    Button(
-                        onClick = {
-                            Log.d("Workout1DetailView", "Token clicked: $token")
-                            workout1DetailViewModel.createCourseUser(token, false, course_id, user_id)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE9602A))
-                    ) {
-                        Text(
-                            text = "Enroll me",
-                            color = Color.White
-                        )
-                    }
-                }
-
-            }
-        }
     }
 }
+
 
 @Preview(
     showBackground = true,
     showSystemUi = true
 )
 @Composable
-fun Workout1DetailViewPreview() {
-    Workout1DetailView(
+fun DetailWorkoutPreview() {
+    DetailWorkout(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         navController = rememberNavController(),
         token = "",
-        workout1DetailViewModel = viewModel(factory = Workout1ViewModel.Factory),
+        detailWorkoutViewModel = viewModel(factory = DetailWorkoutViewModel.Factory),
         context = LocalContext.current,
-        course_id = 0,
+        workout_id = 0,
         user_id  = 0
     )
 }

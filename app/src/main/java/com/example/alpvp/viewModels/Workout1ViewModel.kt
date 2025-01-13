@@ -13,10 +13,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.alpvp.BoxingApplication
 import com.example.alpvp.models.ErrorModel
 import com.example.alpvp.models.GetAllCourseResponse
+import com.example.alpvp.models.GetAllCourseUserResponse
+import com.example.alpvp.models.GetCourseResponse
 import com.example.alpvp.repositories.CourseRepository
+import com.example.alpvp.repositories.CourseUserRepository
 import com.example.alpvp.repositories.UserRepository
 import com.example.alpvp.uiStates.CourseDataStatusUIState
-import com.example.alpvp.uiStates.StringDataStatusUIState
+import com.example.alpvp.uiStates.CourseDetailDataStatusUIState
+import com.example.alpvp.uiStates.CourseUserDataStatesUIStates
+import com.example.alpvp.uiStates.CourseUserRequestDataStatesUIState
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,9 +33,10 @@ import retrofit2.Response
 import java.io.IOException
 
 class Workout1ViewModel(
-    private  val userRepository: UserRepository,
+    private val userRepository: UserRepository,
+    private val courseUserRepository: CourseUserRepository,
     private val courseRepository: CourseRepository
-): ViewModel() {
+) : ViewModel() {
 
     fun saveUsernameToken(token: String, username: String) {
         viewModelScope.launch {
@@ -60,8 +66,95 @@ class Workout1ViewModel(
     var dataStatus: CourseDataStatusUIState by mutableStateOf(CourseDataStatusUIState.Start)
         private set
 
+    var dataStatusCourseUser: CourseUserDataStatesUIStates by mutableStateOf(
+        CourseUserDataStatesUIStates.Start
+    )
+        private set
+
+    var dataStatusCourseUserRequest: CourseUserRequestDataStatesUIState by mutableStateOf(CourseUserRequestDataStatesUIState.Loading)
+        private  set
+
+    var dataStatusDetailCourse: CourseDetailDataStatusUIState by mutableStateOf(CourseDetailDataStatusUIState.Start)
+        private set
+
     fun clearDataErrorMessage() {
         dataStatus = CourseDataStatusUIState.Start
+    }
+
+    fun getCourse(token: String, courseId: Int) {
+        viewModelScope.launch {
+            if (dataStatusDetailCourse !is CourseDetailDataStatusUIState.Success) {
+                dataStatusDetailCourse = CourseDetailDataStatusUIState.Start
+                try {
+                    val call = courseRepository.getCourse(token, courseId)
+                    call.enqueue(object : Callback<GetCourseResponse> {
+                        override fun onResponse(
+                            call: Call<GetCourseResponse>,
+                            res: Response<GetCourseResponse>
+                        ) {
+                            if (res.isSuccessful) {
+                                dataStatusDetailCourse = CourseDetailDataStatusUIState.Success(res.body()!!.data)
+                                Log.d("data-result", "COURSE DATA: ${dataStatusDetailCourse}")
+                            } else {
+                                val errorMessage = Gson().fromJson(
+                                    res.errorBody()!!.charStream(),
+                                    ErrorModel::class.java
+                                )
+                                dataStatusDetailCourse = CourseDetailDataStatusUIState.Failed(errorMessage.errors)
+                            }
+                        }
+                        override fun onFailure(
+                            call: Call<GetCourseResponse>,
+                            t: Throwable
+                        ) {
+                            dataStatusDetailCourse = CourseDetailDataStatusUIState.Failed(t.localizedMessage)
+                        }
+                    })
+                } catch (error: IOException) {
+                    dataStatusDetailCourse = CourseDetailDataStatusUIState.Failed(error.localizedMessage)
+                }
+
+            }
+            else{
+                Log.d("My Course Fetch", "Data already successful, skipping API call")
+            }
+
+
+        }
+    }
+
+    fun getAllCourseUserByUserID(token: String, userId: Int) {
+        viewModelScope.launch {
+            dataStatusCourseUser = CourseUserDataStatesUIStates.Start
+            try {
+                val call = courseUserRepository.getAllCourseUsersByUserId(token, userId)
+                call.enqueue(object : Callback<GetAllCourseUserResponse> {
+                    override fun onResponse(
+                        call: Call<GetAllCourseUserResponse>,
+                        res: Response<GetAllCourseUserResponse>
+                    ) {
+                        if (res.isSuccessful) {
+                            dataStatusCourseUser = CourseUserDataStatesUIStates.Success(res.body()!!.data)
+                            Log.d("data-result", "COURSE DATA: ${dataStatusCourseUser}")
+                        }else {
+                            val errorMessage = Gson().fromJson(
+                                res.errorBody()!!.charStream(),
+                                ErrorModel::class.java
+                            )
+                            dataStatusCourseUser = CourseUserDataStatesUIStates.Failed(errorMessage.errors)
+                        }
+                    }
+                    override fun onFailure(
+                        call: Call<GetAllCourseUserResponse>,
+                        t: Throwable
+                    ) {
+                        dataStatusCourseUser = CourseUserDataStatesUIStates.Failed(t.localizedMessage)
+                    }
+                })
+            } catch (error: IOException) {
+                dataStatusCourseUser = CourseUserDataStatesUIStates.Failed(error.localizedMessage)
+            }
+        }
     }
 
     fun getAllCourses(token: String) {
@@ -73,7 +166,10 @@ class Workout1ViewModel(
             try {
                 val call = courseRepository.getAllCourses(token)
                 call.enqueue(object : Callback<GetAllCourseResponse> {
-                    override fun onResponse(call: Call<GetAllCourseResponse>, res: Response<GetAllCourseResponse>) {
+                    override fun onResponse(
+                        call: Call<GetAllCourseResponse>,
+                        res: Response<GetAllCourseResponse>
+                    ) {
                         if (res.isSuccessful) {
                             dataStatus = CourseDataStatusUIState.Success(res.body()!!.data)
 
@@ -105,10 +201,9 @@ class Workout1ViewModel(
                 val application = (this[APPLICATION_KEY] as BoxingApplication)
                 val userRepository = application.container.userRepository
                 val courseRepository = application.container.courseRepository
-                Workout1ViewModel(userRepository, courseRepository)
+                val courseUserRepository = application.container.courseUserRepository
+                Workout1ViewModel(userRepository, courseUserRepository, courseRepository)
             }
         }
     }
-
-
 }
