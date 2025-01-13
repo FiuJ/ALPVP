@@ -64,7 +64,7 @@ fun BoxingApp(
     val user_id = profileViewModel.user_id.collectAsState()
 
     val username = profileViewModel.username.collectAsState()
-    val id = profileViewModel.id.collectAsState()
+    val id = profileViewModel.user_id.collectAsState()
 //    val navController = rememberNavController()
 
 
@@ -132,6 +132,7 @@ fun BoxingApp(
             arguments = listOf(navArgument("course_id") {type = NavType.IntType})) { backStackEntry ->
 
             val course_id = backStackEntry.arguments?.getInt("course_id") ?: 0
+        }
 
         composable(route = PagesEnum.Community.name) {
             Community(
@@ -226,8 +227,11 @@ fun BoxingApp(
 //            )
 //        }
 
-    }
 
+        composable(route = PagesEnum.workoutList.name+"/{course_id}",
+            arguments = listOf(navArgument("course_id") {type = NavType.IntType})) { backStackEntry ->
+
+            val course_id = backStackEntry.arguments?.getInt("course_id") ?: 0
 
             workoutList(
                 workoutListViewModel = workoutListViewModel,
@@ -257,5 +261,16 @@ fun BoxingApp(
             )
         }
 
+
+
+
     }
+
+
+
+//
+
+
+
+
 }

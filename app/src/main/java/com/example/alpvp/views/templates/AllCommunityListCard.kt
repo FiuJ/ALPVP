@@ -30,7 +30,7 @@ import com.example.alpvp.enums.PagesEnum
 fun AllCommunityListCard(
     CommunityName: String,
     onCardClick: () -> Unit,
-    navController: NavHostController
+    navController: NavController
 ){
     Card(
         modifier = Modifier
@@ -58,7 +58,7 @@ fun AllCommunityListCard(
 
                 Button(
                     onClick = {
-                        onCardClick
+                        navController.navigate(PagesEnum.CommunityPost.name)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF3F1EF),

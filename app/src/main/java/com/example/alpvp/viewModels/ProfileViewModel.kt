@@ -45,7 +45,11 @@ class ProfileViewModel (
         initialValue = ""
     )
 
-    val user_id: StateFlow<Int> = userRepository.currentUserID.stateIn(
+    val user_id: StateFlow<Int> = userRepository.currentUserId.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
 
     val id: StateFlow<Int> = userRepository.currentUserId.stateIn(
 

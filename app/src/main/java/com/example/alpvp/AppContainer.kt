@@ -22,7 +22,6 @@ import com.example.alpvp.repositories.NetworkCourseWorkoutRepository
 import com.example.alpvp.repositories.NetworkUserRepository
 import com.example.alpvp.repositories.NetworkWorkoutRepository
 import com.example.alpvp.repositories.NetworkPostRepository
-import com.example.alpvp.repositories.NetworkUserRepository
 import com.example.alpvp.repositories.PostRepository
 
 import com.example.alpvp.repositories.UserRepository
@@ -64,8 +63,8 @@ class DefaultAppContainer(
     private val userDataStore: DataStore<Preferences>
 ):AppContainer{
     //link baseurl
-    private val baseUrl = "http://192.168.181.222:3000/"
-//    private val baseUrl = "http://192.168.43.222:3000/"
+//    private val baseUrl = "http://192.168.181.222:3000/"
+    private val baseUrl = "http://192.168.43.222:3000/"
 //    private val baseUrl = "http://192.168.1.6:3000/"
 
     //IP TEST

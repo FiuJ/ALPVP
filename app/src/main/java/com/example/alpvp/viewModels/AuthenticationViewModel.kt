@@ -125,7 +125,7 @@ class AuthenticationViewModel (
         viewModelScope.launch {
             userRepository.saveUserToken(token)
             userRepository.saveUsername(username)
-            userRepository.saveUserID(user_id)
+            userRepository.saveUserId(id)
         }
     }
 
@@ -226,7 +226,7 @@ class AuthenticationViewModel (
                 call.enqueue(object: Callback<UserResponse> {
                     override fun onResponse(call: Call<UserResponse>, res: Response<UserResponse>) {
                         if (res.isSuccessful) {
-
+Log.d ("Login", "Sucsess")
                             saveUsernameToken(res.body()!!.data.token!!, res.body()!!.data.username, res.body()!!.data.id)
 
                             saveUsernameTokenId(res.body()!!.data.token!!, res.body()!!.data.username, res.body()!!.data.id)
@@ -242,6 +242,7 @@ class AuthenticationViewModel (
                                 }
                             }
                         } else {
+                            Log.d ("Login", "Failed 1")
                             val errorMessage = Gson().fromJson(
                                 res.errorBody()!!.charStream(),
                                 ErrorModel::class.java
@@ -253,11 +254,13 @@ class AuthenticationViewModel (
                     }
 
                     override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                        Log.d ("Login", "Failed 2")
                         dataStatus = AuthenticationStatusUIState.Failed(t.localizedMessage)
                     }
 
                 })
             } catch (error: IOException) {
+                Log.d ("Login", "Failed 3")
                 dataStatus = AuthenticationStatusUIState.Failed(error.localizedMessage)
                 Log.d("register-error", "LOGIN ERROR: ${error.toString()}")
             }

@@ -7,7 +7,7 @@ enum class PagesEnum() {
     Home,
     CourseDetail,
     workoutList,
-    workoutDetail
+    workoutDetail,
 //workout1
 //    CreateTodo,
 //    TodoDetail
