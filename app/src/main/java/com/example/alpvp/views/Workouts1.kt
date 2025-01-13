@@ -293,7 +293,7 @@ fun Workouts1(
                     LazyRow(
                         flingBehavior = ScrollableDefaults.flingBehavior(),
                         modifier = Modifier
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp, horizontal = 8.dp)
                             .clip(RoundedCornerShape(10.dp))
                     ) {
                         items(dataStatus.data) { course ->
@@ -301,7 +301,7 @@ fun Workouts1(
                                 title = course.detail_course,
                                 course_duration = course.course_duration,
                                 modifier = Modifier
-                                    .padding(bottom = 12.dp),
+                                    .padding(bottom = 12.dp, start = 4.dp, end = 4.dp),
                                 onCardClick = {
                                     workout1DetailViewModel.getCourse(
                                         token,
