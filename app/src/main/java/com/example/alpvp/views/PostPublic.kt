@@ -131,7 +131,9 @@ fun PostPublic(
                             Name = post.post_name,
                             Description = post.post_description,
                             Date = post.post_date,
-                            onCardClick = {}
+                            onCardClick = {},
+//                            commentViewModel = viewModel(factory = PostViewModel.Factory),
+//                            post_id = post.post_id
                         )
                     }
                 }

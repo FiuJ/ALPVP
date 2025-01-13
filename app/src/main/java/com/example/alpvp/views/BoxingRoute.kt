@@ -20,6 +20,9 @@ import androidx.navigation.navArgument
 import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.AuthenticationViewModel
 
+import com.example.alpvp.viewModels.CommentViewModel
+
+
 import com.example.alpvp.viewModels.DetailWorkoutViewModel
 
 import com.example.alpvp.viewModels.CommunityViewModel
@@ -28,7 +31,11 @@ import com.example.alpvp.viewModels.PostViewModel
 import com.example.alpvp.viewModels.ProfileViewModel
 import com.example.alpvp.viewModels.Workout1DetailViewModel
 import com.example.alpvp.viewModels.Workout1ViewModel
+
+import com.example.alpvp.views.templates.PostListCard
+
 import com.example.alpvp.viewModels.WorkoutListViewModel
+
 
 @Composable
 fun BoxingApp(
@@ -44,6 +51,8 @@ fun BoxingApp(
 
     postViewModel: PostViewModel = viewModel(factory = PostViewModel.Factory),
 
+    commentViewModel: CommentViewModel = viewModel(factory = CommentViewModel.Factory)
+
 //    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 //    todoListFormViewModel: TodoListFormViewModel = viewModel(factory = TodoListFormViewModel.Factory),
 //    todoDetailViewModel: TodoDetailViewModel = viewModel(factory = TodoDetailViewModel.Factory)
@@ -56,6 +65,7 @@ fun BoxingApp(
 
     val username = profileViewModel.username.collectAsState()
     val id = profileViewModel.id.collectAsState()
+//    val navController = rememberNavController()
 
 
 
@@ -150,6 +160,26 @@ fun BoxingApp(
                 id = id.value
             )
         }
+
+        composable(route = PagesEnum.UpdatePost.name){
+            UpdatePost(
+                navController = navController,
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                token = token.value,
+                postId = postViewModel.postId
+            )
+        }
+
+//        composable(route = PagesEnum.Comment.name){
+//            PostListCard(
+//                Name = "Gabriella Austin",
+//                Description = "I feel great trying boxing for the first time! Such a thrilling experience",
+//                Date = "28 December 2024",
+//                onCardClick = {},
+//                commentViewModel = viewModel(factory = CommentViewModel.Factory),
+//                post_id = 0
+//            )
+//        }
 //        composable(route = PagesEnum.UpdatePost.name + "/{id}", arguments = listOf(
 //            navArgument(name = "id") {
 //                type = NavType.IntType
@@ -163,21 +193,38 @@ fun BoxingApp(
 //                postId =
 //            )
 //        }
-        composable(route = PagesEnum.UpdatePost.name + "/{postId}",
-            arguments = listOf(
-                navArgument(name = "postId") {
-                    type = NavType.IntType
-                }
-            )
-        ) { backStackEntry ->
-            val postId = backStackEntry.arguments?.getInt("postId")
-            UpdatePost(
-                navController = navController,
-                postViewModel = postViewModel,
-                token = token.value,
-                postId = postId!!
-            )
-        }
+//        composable(route = PagesEnum.UpdatePost.name + "/{postId}",
+//            arguments = listOf(
+//                navArgument(name = "postId") {
+//                    type = NavType.IntType
+//                }
+//            )
+//        ) { backStackEntry ->
+//            val postId = backStackEntry.arguments?.getInt("postId")?:0
+//            UpdatePost(
+//                navController = navController,
+//                postViewModel = postViewModel,
+//                token = token.value,
+//                postId = postId!!
+//            )
+//        }
+
+//        composable(
+//            route = PagesEnum.UpdatePost.name + "/{postId}",
+//            arguments = listOf(
+//                navArgument("postId") {
+//                    type = NavType.IntType
+//                }
+//            )
+//        ) { backStackEntry ->
+//            val postId = backStackEntry.arguments?.getInt("postId") ?: 0
+//            UpdatePost(
+//                navController = navController,
+//                postViewModel = postViewModel,
+//                token = token.value,
+//                postId = postId
+//            )
+//        }
 
     }
 

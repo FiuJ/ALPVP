@@ -17,4 +17,8 @@ enum class PagesEnum() {
     CreatePost,
     UpdatePost,
 
+    Comment
+
+
+
 }

@@ -107,6 +107,17 @@ class PostViewModel (
         setIsPublic(false)
     }
 
+    fun savePostId (postId: Int){
+        this.postId = postId
+    }
+
+    fun goesToUpdate(
+        navController: NavHostController
+        ){
+        Log.d("postId", "postId: $postId")
+        navController.navigate(PagesEnum.UpdatePost.name)
+    }
+
     private val _publicPost = MutableStateFlow<List<PostModel>>(emptyList())
     val publicPost: StateFlow<List<PostModel>> = _publicPost
 
