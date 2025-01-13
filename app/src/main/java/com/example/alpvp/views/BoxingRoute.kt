@@ -1,5 +1,6 @@
 package com.example.alpvp.views
 
+import android.graphics.pdf.PdfDocument.Page
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.AuthenticationViewModel
+
 import com.example.alpvp.viewModels.DetailWorkoutViewModel
+
+import com.example.alpvp.viewModels.CommunityViewModel
+import com.example.alpvp.viewModels.PostViewModel
+
 import com.example.alpvp.viewModels.ProfileViewModel
 import com.example.alpvp.viewModels.Workout1DetailViewModel
 import com.example.alpvp.viewModels.Workout1ViewModel
@@ -29,10 +35,14 @@ fun BoxingApp(
     navController: NavHostController = rememberNavController(),
     authenticationViewModel: AuthenticationViewModel = viewModel(factory = AuthenticationViewModel.Factory),
     profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
+
     workout1DetailViewModel: Workout1DetailViewModel = viewModel(factory = Workout1DetailViewModel.Factory),
     workoutListViewModel: WorkoutListViewModel = viewModel (factory = WorkoutListViewModel.Factory),
     detailWorkoutViewModel: DetailWorkoutViewModel = viewModel (factory = DetailWorkoutViewModel.Factory),
 
+
+
+    postViewModel: PostViewModel = viewModel(factory = PostViewModel.Factory),
 
 //    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 //    todoListFormViewModel: TodoListFormViewModel = viewModel(factory = TodoListFormViewModel.Factory),
@@ -41,7 +51,13 @@ fun BoxingApp(
 
     val localContext = LocalContext.current
     val token = profileViewModel.token.collectAsState()
+
     val user_id = profileViewModel.user_id.collectAsState()
+
+    val username = profileViewModel.username.collectAsState()
+    val id = profileViewModel.id.collectAsState()
+
+
 
     NavHost(navController = navController, startDestination = if(token.value != "Unknown" && token.value != "") {
         PagesEnum.Home.name
@@ -85,6 +101,7 @@ fun BoxingApp(
             )
         }
 
+
         composable(route = PagesEnum.CourseDetail.name+"/{course_id}",
             arguments = listOf(navArgument("course_id") {type = NavType.IntType})) { backStackEntry ->
 
@@ -105,6 +122,65 @@ fun BoxingApp(
             arguments = listOf(navArgument("course_id") {type = NavType.IntType})) { backStackEntry ->
 
             val course_id = backStackEntry.arguments?.getInt("course_id") ?: 0
+
+        composable(route = PagesEnum.Community.name) {
+            Community(
+                navController = navController,
+                communityViewModel = viewModel(factory = CommunityViewModel.Factory),
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                id = id.value,
+                token = token.value,
+                context = localContext
+            )
+        }
+
+        composable(route = PagesEnum.CommunityPost.name){
+            PostPublic(
+                navController = navController,
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                token = token.value,
+                id = id.value
+            )
+        }
+        composable(route = PagesEnum.CreatePost.name){
+            CreatePost(
+                navController = navController,
+                postViewModel = viewModel(factory = PostViewModel.Factory),
+                token = token.value,
+                id = id.value
+            )
+        }
+//        composable(route = PagesEnum.UpdatePost.name + "/{id}", arguments = listOf(
+//            navArgument(name = "id") {
+//                type = NavType.IntType
+//            }
+//        )){
+//            val id = backStackEntry.arguments?.getInt("id")
+//            UpdatePost(
+//                navController = navController,
+//                postViewModel = viewModel(factory = PostViewModel.Factory),
+//                token = token.value,
+//                postId =
+//            )
+//        }
+        composable(route = PagesEnum.UpdatePost.name + "/{postId}",
+            arguments = listOf(
+                navArgument(name = "postId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getInt("postId")
+            UpdatePost(
+                navController = navController,
+                postViewModel = postViewModel,
+                token = token.value,
+                postId = postId!!
+            )
+        }
+
+    }
+
 
             workoutList(
                 workoutListViewModel = workoutListViewModel,

@@ -286,6 +286,7 @@ fun Workouts1(
                     text = "Profile"
                 )
             }
+
             // TODO: Read all Courses
             when (dataStatus) {
                 is CourseDataStatusUIState.Success -> if (dataStatus.data.isNotEmpty()) {
@@ -354,6 +355,21 @@ fun Workouts1(
                     )
                 }
             }
+
+            Button(
+                onClick = {
+                    navController.navigate(PagesEnum.Community.name){
+                        popUpTo(PagesEnum.Home.name){
+                            inclusive = true
+                        }
+                    }
+                }
+            ) {
+                Text(
+                    text = "Community"
+                )
+            }
+                
 
             Text(
                 text = "My Courses"

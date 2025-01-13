@@ -15,7 +15,11 @@ import retrofit2.Call
 interface UserRepository {
     val currentUserToken: Flow<String>
     val currentUsername: Flow<String>
+
     val currentUserID: Flow<Int>
+
+    val currentUserId: Flow<Int>
+
 
     fun logout(token: String): Call<GeneralResponseModel>
 
@@ -23,12 +27,16 @@ interface UserRepository {
 
     suspend fun saveUsername(username: String)
 
-    suspend fun saveUserID(id: Int)
 
-    fun emergencyLogout(token: String): Call<GeneralResponseModel>
+//     suspend fun saveUserID(id: Int)
+
+//     fun emergencyLogout(token: String): Call<GeneralResponseModel>
 
 
 //    fun getUserIdFromToken(token: String): Call<GeneralResponseModel>
+
+    suspend fun saveUserId(id: Int)
+
 }
 
 class NetworkUserRepository(
@@ -38,11 +46,13 @@ class NetworkUserRepository(
     private companion object {
         val USER_TOKEN = stringPreferencesKey("token")
         val USERNAME = stringPreferencesKey("username")
-        val USER_ID = intPreferencesKey("user_id")
-    }
+
 
     override val currentUserID: Flow<Int> = userDataStore.data.map { preferences ->
         preferences[USER_ID]?.toInt() ?: 0
+
+        val USER_ID = stringPreferencesKey("id")
+
     }
 
     override val currentUserToken: Flow<String> = userDataStore.data.map { preferences ->
@@ -51,6 +61,10 @@ class NetworkUserRepository(
 
     override val currentUsername: Flow<String> = userDataStore.data.map { preferences ->
         preferences[USERNAME] ?: "Unknown"
+    }
+
+    override val currentUserId: Flow<Int> = userDataStore.data.map { preferences ->
+        preferences[USER_ID]?.toIntOrNull() ?: 0
     }
 
     override suspend fun saveUserToken(token: String) {
@@ -68,6 +82,12 @@ class NetworkUserRepository(
     override suspend fun saveUsername(username: String) {
         userDataStore.edit { preferences ->
             preferences[USERNAME] = username
+        }
+    }
+
+    override suspend fun saveUserId(id: Int) {
+        userDataStore.edit { preferences ->
+            preferences[USER_ID] = id.toString()
         }
     }
 

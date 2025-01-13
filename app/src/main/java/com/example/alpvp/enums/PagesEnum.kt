@@ -11,4 +11,10 @@ enum class PagesEnum() {
 //workout1
 //    CreateTodo,
 //    TodoDetail
+
+    Community,
+    CommunityPost,
+    CreatePost,
+    UpdatePost,
+
 }

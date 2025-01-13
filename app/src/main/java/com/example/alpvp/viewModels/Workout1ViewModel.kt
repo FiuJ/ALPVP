@@ -51,6 +51,12 @@ class Workout1ViewModel(
         initialValue = ""
     )
 
+    val id: StateFlow<Int> = userRepository.currentUserId.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
+
     val token: StateFlow<String> = userRepository.currentUserToken.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
