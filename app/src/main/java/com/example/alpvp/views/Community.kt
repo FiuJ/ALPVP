@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,6 +56,41 @@ import com.example.alpvp.viewModels.PostViewModel
 import com.example.alpvp.views.templates.AllCommunityListCard
 import com.example.alpvp.views.templates.MyPostListCard
 import com.example.alpvp.views.templates.PostListCard
+import com.example.alpvp.views.templates.navBar
+
+@Composable
+fun CommunityScreen(
+    navController: NavHostController,
+    communityViewModel: CommunityViewModel,
+    postViewModel: PostViewModel,
+    id: Int,
+    token: String,
+    context: Context
+){
+    Scaffold(
+        topBar = {},
+        // Use the bottomBar slot to include your navBar
+        bottomBar = {
+            navBar(navController = navController)
+        }
+    ) { innerPadding ->
+        // Apply the innerPadding to avoid overlapping the navBar
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+        ) {
+            Community(
+                navController = navController,
+                communityViewModel = communityViewModel,
+                postViewModel = postViewModel,
+                id = id,
+                token = token,
+                context = context
+            )
+        }
+    }
+
+}
 
 @Composable
 fun Community(
@@ -91,10 +128,7 @@ fun Community(
             .background(color = Color(0xFFF3F1EF))
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(color = Color(0xFFB13B1A))
+
         ) {
 
         }
@@ -212,17 +246,17 @@ fun Community(
 
 
         //BUTTON SEMENTARA BUAT CEK HALAMAN
-        Button(
-            onClick = {
-                navController.navigate(PagesEnum.Profile.name){
-
-                }
-            }
-        ) {
-            Text(
-                text = "Profile"
-            )
-        }
+//        Button(
+//            onClick = {
+//                navController.navigate(PagesEnum.Profile.name){
+//
+//                }
+//            }
+//        ) {
+//            Text(
+//                text = "Profile"
+//            )
+//        }
 
 
 
@@ -278,7 +312,7 @@ fun MyJournalContent(
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.Center
         ){
             Text(

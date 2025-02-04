@@ -3,6 +3,7 @@ package com.example.alpvp.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +34,37 @@ import com.example.alpvp.enums.PagesEnum
 import com.example.alpvp.viewModels.PostViewModel
 import com.example.alpvp.views.templates.AllCommunityListCard
 import com.example.alpvp.views.templates.PostListCard
+import com.example.alpvp.views.templates.navBar
+
+@Composable
+fun PostPublicScreen(
+    navController: NavHostController,
+    postViewModel: PostViewModel,
+    token: String,
+    id: Int
+){
+    Scaffold(
+        topBar = {},
+        // Use the bottomBar slot to include your navBar
+        bottomBar = {
+            navBar(navController = navController)
+        }
+    ) { innerPadding ->
+        // Apply the innerPadding to avoid overlapping the navBar
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+        ) {
+            PostPublic(
+                navController = navController,
+                postViewModel = postViewModel,
+                token = token,
+                id = id
+            )
+        }
+    }
+
+}
 
 @Composable
 fun PostPublic(
@@ -52,10 +85,7 @@ fun PostPublic(
             .background(color = Color(0xFFF3F1EF))
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(color = Color(0xFFB13B1A))
+
         ) {
 
         }
@@ -94,17 +124,17 @@ fun PostPublic(
 
 
         }
-        Button(
-            onClick = {
-                navController.navigate(PagesEnum.Profile.name){
-
-                }
-            }
-        ) {
-            Text(
-                text = "Profile"
-            )
-        }
+//        Button(
+//            onClick = {
+//                navController.navigate(PagesEnum.Profile.name){
+//
+//                }
+//            }
+//        ) {
+//            Text(
+//                text = "Profile"
+//            )
+//        }
         Column {
             Row (
                 modifier = Modifier

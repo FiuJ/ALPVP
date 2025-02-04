@@ -39,6 +39,38 @@ import com.example.alpvp.R
 import com.example.alpvp.uiStates.StringDataStatusUIState
 import com.example.alpvp.viewModels.ProfileViewModel
 import android.util.Log
+import androidx.compose.material3.Scaffold
+import com.example.alpvp.views.templates.navBar
+
+@Composable
+fun ProfileScreen(
+    profileViewModel: ProfileViewModel = viewModel(),
+    navController: NavHostController,
+    token: String,
+    context: Context
+){
+    Scaffold(
+        topBar = {},
+        // Use the bottomBar slot to include your navBar
+        bottomBar = {
+            navBar(navController = navController)
+        }
+    ) { innerPadding ->
+        // Apply the innerPadding to avoid overlapping the navBar
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+        ) {
+            Profile(
+                profileViewModel = profileViewModel,
+                navController = navController,
+                token = token,
+                context = context
+            )
+        }
+    }
+
+}
 
 @Composable
 fun Profile(
@@ -64,10 +96,7 @@ fun Profile(
             .background(color = Color(0xFFF3F1EF))
     ){
         Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(color = Color(0xFFB13B1A))
+
         ){
 
         }

@@ -91,7 +91,16 @@ fun BoxingApp(
         }
 
         composable(route = PagesEnum.Home.name) {
-            Workouts1(
+//            Workouts1(
+//                navController = navController, // Use the shared instance here
+//                workout1ViewModel = viewModel(factory = Workout1ViewModel.Factory),
+//                workout1DetailViewModel = viewModel(factory = Workout1DetailViewModel.Factory),
+//                token = token.value, // Use the collected token value here
+//                context = localContext,
+//                user_id = user_id.value,
+//                workoutListViewModel = viewModel(factory = WorkoutListViewModel.Factory),
+//            )
+            WorkoutsScreen(
                 navController = navController, // Use the shared instance here
                 workout1ViewModel = viewModel(factory = Workout1ViewModel.Factory),
                 workout1DetailViewModel = viewModel(factory = Workout1DetailViewModel.Factory),
@@ -103,7 +112,7 @@ fun BoxingApp(
         }
 
         composable(route = PagesEnum.Profile.name) {
-            Profile(
+            ProfileScreen(
                 profileViewModel = viewModel(factory = ProfileViewModel.Factory),
                 navController = navController,
                 token = token.value,
@@ -135,7 +144,7 @@ fun BoxingApp(
         }
 
         composable(route = PagesEnum.Community.name) {
-            Community(
+            CommunityScreen(
                 navController = navController,
                 communityViewModel = viewModel(factory = CommunityViewModel.Factory),
                 postViewModel = viewModel(factory = PostViewModel.Factory),
@@ -146,7 +155,7 @@ fun BoxingApp(
         }
 
         composable(route = PagesEnum.CommunityPost.name){
-            PostPublic(
+            PostPublicScreen(
                 navController = navController,
                 postViewModel = viewModel(factory = PostViewModel.Factory),
                 token = token.value,

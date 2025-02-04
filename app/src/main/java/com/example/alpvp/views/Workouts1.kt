@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +53,43 @@ import com.example.alpvp.viewModels.Workout1ViewModel
 import com.example.alpvp.viewModels.WorkoutListViewModel
 import com.example.alpvp.views.templates.CourseCardTemplate
 import com.example.alpvp.views.templates.CourseCardTemplate2
+import com.example.alpvp.views.templates.navBar
+
+@Composable
+fun WorkoutsScreen(
+    navController: NavHostController,
+    workout1ViewModel: Workout1ViewModel,
+    workoutListViewModel: WorkoutListViewModel,
+    workout1DetailViewModel: Workout1DetailViewModel,
+    token: String,
+    context: Context,
+    user_id: Int
+) {
+    Scaffold(
+        topBar = {},
+        // Use the bottomBar slot to include your navBar
+        bottomBar = {
+            navBar(navController = navController)
+        }
+    ) { innerPadding ->
+        // Apply the innerPadding to avoid overlapping the navBar
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+        ) {
+            Workouts1(
+                navController = navController,
+                workout1ViewModel = workout1ViewModel,
+                workoutListViewModel = workoutListViewModel,
+                workout1DetailViewModel = workout1DetailViewModel,
+                token = token,
+                context = context,
+                user_id = user_id
+            )
+        }
+    }
+}
+
 
 @Composable
 fun Workouts1(
@@ -92,10 +130,7 @@ fun Workouts1(
             .background(color = Color(0xFFF3F1EF))
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(color = Color(0xFFB13B1A))
+
         ) {
 
         }
@@ -273,19 +308,19 @@ fun Workouts1(
                 }
             }
 
-            Button(
-                onClick = {
-                    navController.navigate(PagesEnum.Profile.name) {
-                        popUpTo(PagesEnum.Home.name) {
-                            inclusive = true
-                        }
-                    }
-                }
-            ) {
-                Text(
-                    text = "Profile"
-                )
-            }
+//            Button(
+//                onClick = {
+//                    navController.navigate(PagesEnum.Profile.name) {
+//                        popUpTo(PagesEnum.Home.name) {
+//                            inclusive = true
+//                        }
+//                    }
+//                }
+//            ) {
+//                Text(
+//                    text = "Profile"
+//                )
+//            }
 
             // TODO: Read all Courses
             when (dataStatus) {
@@ -356,19 +391,19 @@ fun Workouts1(
                 }
             }
 
-            Button(
-                onClick = {
-                    navController.navigate(PagesEnum.Community.name){
-                        popUpTo(PagesEnum.Home.name){
-                            inclusive = true
-                        }
-                    }
-                }
-            ) {
-                Text(
-                    text = "Community"
-                )
-            }
+//            Button(
+//                onClick = {
+//                    navController.navigate(PagesEnum.Community.name){
+//                        popUpTo(PagesEnum.Home.name){
+//                            inclusive = true
+//                        }
+//                    }
+//                }
+//            ) {
+//                Text(
+//                    text = "Community"
+//                )
+//            }
                 
 
             Text(
