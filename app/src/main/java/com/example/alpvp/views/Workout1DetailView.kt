@@ -134,7 +134,9 @@ fun Workout1DetailView(
                         text = dataStatus.data.detail_course,
                         fontSize = 35.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(start = 20.dp)
                     )
 
                     // Additional details, can be adjusted per your requirements
